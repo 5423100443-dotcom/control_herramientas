@@ -1,0 +1,274 @@
+import streamlit as st
+import sqlite3
+import pandas as pd
+import plotly.express as px
+import base64
+from streamlit_autorefresh import st_autorefresh
+
+# Auto refresh cada 5 segundos
+st_autorefresh(interval=5000, key="refresh")
+
+# =========================
+# CONFIGURACIÓN DE PÁGINA
+# =========================
+st.set_page_config(page_title="Control Tool Crib CNC", layout="wide")
+
+# =========================
+# FONDO INDUSTRIAL OSCURO (VERSIÓN ESTABLE)
+# =========================
+def poner_fondo():
+    with open("fondo_cnc.png", "rb") as f:
+        data = f.read()
+        encoded = base64.b64encode(data).decode()
+
+    fondo_css = """
+    <style>
+    .stApp {
+        background: linear-gradient(
+            rgba(0,0,0,0.55),
+            rgba(0,0,0,0.55)
+        ),
+        url("data:image/png;base64,%s");
+        background-size: cover;
+        background-attachment: fixed;
+    }
+
+    h1, h2, h3, h4, h5, h6, p, label {
+        color: white !important;
+    }
+
+    .stSelectbox label {
+        color: white !important;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    </style>
+    """ % encoded
+
+    st.markdown(fondo_css, unsafe_allow_html=True)
+
+poner_fondo()
+
+# =========================
+# TÍTULO
+# =========================
+st.title("🏭 Sistema de Control de Herramientas CNC")
+
+# =========================
+# CARGAR BASE DE DATOS
+# =========================
+conn = sqlite3.connect("toolcrib.db")
+df = pd.read_sql_query("SELECT * FROM movimientos", conn)
+conn.close()
+
+if df.empty:
+    st.warning("No hay registros en la base de datos.")
+    st.stop()
+
+# =========================
+# PROCESAR FECHA Y MES
+# =========================
+df["fecha"] = pd.to_datetime(df["fecha"])
+df["mes"] = df["fecha"].dt.strftime("%Y-%m")
+
+# =========================
+# FILTROS
+# =========================
+st.markdown("## 🔎 Filtros")
+
+col1, col2, col3 = st.columns(3)
+
+meses = ["Todos"] + sorted(df["mes"].unique(), reverse=True)
+maquinas = ["Todas"] + sorted(df["maquina"].unique())
+empleados = ["Todos"] + sorted(df["empleado"].unique())
+
+with col1:
+    mes_seleccionado = st.selectbox("📅 Selecciona Mes", meses)
+
+with col2:
+    maquina_seleccionada = st.selectbox("🏭 Selecciona Máquina", maquinas)
+
+with col3:
+    empleado_seleccionado = st.selectbox("👷 Selecciona Empleado", empleados)
+
+# =========================
+# FILTRAR DATOS DINÁMICO
+# =========================
+df_filtrado = df.copy()
+filtros_aplicados = False
+
+if mes_seleccionado != "Todos":
+    df_filtrado = df_filtrado[df_filtrado["mes"] == mes_seleccionado]
+    filtros_aplicados = True
+
+if maquina_seleccionada != "Todas":
+    df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina_seleccionada]
+    filtros_aplicados = True
+
+if empleado_seleccionado != "Todos":
+    df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado_seleccionado]
+    filtros_aplicados = True
+
+# 🚫 Si no hay filtros, no mostrar nada
+if not filtros_aplicados:
+    st.info("Selecciona al menos un filtro para mostrar información.")
+    st.stop()
+
+if df_filtrado.empty:
+    st.warning("No hay datos con los filtros seleccionados.")
+    st.stop()
+
+# =========================
+# KPIs
+# =========================
+st.markdown("## 📌 Resumen General")
+
+col1, col2 = st.columns(2)
+
+total_gastado = df_filtrado["precio"].sum()
+total_cambios = len(df_filtrado)
+
+with col1:
+    st.metric("💰 Total Gastado", f"${total_gastado:,.2f}")
+
+with col2:
+    st.metric("🔧 Total de Cambios", total_cambios)
+
+# =========================
+# HISTORIAL
+# =========================
+st.markdown("## 📋 Historial")
+
+if not df_filtrado.empty:
+
+    tabla = df_filtrado[[
+        "fecha",
+        "empleado",
+        "maquina",
+        "herramienta",
+        "tipo_cambio",
+        "motivo",
+        "precio"
+    ]].copy()
+
+    # Calcular altura dinámica según cantidad de filas
+    filas = len(tabla)
+    alto_tabla = min(600, 60 + (filas * 35))  # 35px por fila + encabezado
+
+    st.data_editor(
+        tabla,
+        hide_index=True,
+        width="stretch",
+        height=alto_tabla,
+        column_config={
+            "fecha": st.column_config.DatetimeColumn("Fecha"),
+            "empleado": st.column_config.NumberColumn("Empleado"),
+            "maquina": st.column_config.TextColumn("Máquina"),
+            "herramienta": st.column_config.TextColumn("Herramienta"),
+            "tipo_cambio": st.column_config.TextColumn("Tipo Cambio"),
+            "motivo": st.column_config.TextColumn("Motivo"),
+            "precio": st.column_config.NumberColumn(
+                "Precio ($)",
+                format="$ %.2f"
+            )
+        },
+        disabled=True
+    )
+
+else:
+    st.info("No hay registros para los filtros seleccionados.")
+# =========================
+# GRÁFICA 1 - CANTIDAD CAMBIOS
+# =========================
+df_cambios = (
+    df_filtrado
+    .groupby("herramienta")
+    .size()
+    .reset_index(name="cantidad_cambios")
+    .sort_values(by="cantidad_cambios", ascending=False)
+)
+
+if not df_cambios.empty:
+
+    fig_cambios = px.bar(
+        df_cambios,
+        x="herramienta",
+        y="cantidad_cambios",
+        text="cantidad_cambios",
+        color="cantidad_cambios",
+        color_continuous_scale="Blues",
+        title="🔧 Cantidad de Cambios por Herramienta"
+    )
+
+    fig_cambios.update_traces(
+        textposition="outside",
+        cliponaxis=False
+    )
+
+    fig_cambios.update_layout(
+        template="plotly_dark",
+        title_x=0.5,
+        xaxis_title="Herramienta",
+        yaxis_title="Cantidad de Cambios",
+        margin=dict(t=120)  # 👈 espacio extra arriba
+    )
+
+    fig_cambios.update_layout(
+        template="plotly_dark",
+        title_x=0.5,
+        xaxis_title="Herramienta",
+        yaxis_title="Cantidad de Cambios"
+    )
+
+    st.plotly_chart(fig_cambios, use_container_width=True)
+
+else:
+    st.info("No hay datos para mostrar.")
+
+# =========================
+# GRÁFICA 2 - GASTO POR HERRAMIENTA
+# =========================
+df_gasto = (
+    df_filtrado
+    .groupby("herramienta")["precio"]
+    .sum()
+    .reset_index()
+    .sort_values(by="precio", ascending=False)
+)
+if not df_gasto.empty:
+
+    fig_gasto = px.bar(
+        df_gasto,
+        x="herramienta",
+        y="precio",
+        text="precio",
+        color="precio",
+        color_continuous_scale="Greens",
+        title="💰 Gasto Total por Herramienta"
+    )
+
+    fig_gasto.update_traces(
+        texttemplate='$%{text:,.2f}',
+        textposition="outside",
+        cliponaxis=False
+    )
+
+    fig_gasto.update_layout(
+        template="plotly_dark",
+        title_x=0.5,
+        xaxis_title="Herramienta",
+        yaxis_title="Total Gastado ($)",
+        margin=dict(t=120)  # 👈 espacio arriba
+    )
+
+    fig_gasto.update_layout(
+        template="plotly_dark",
+        title_x=0.5,
+        xaxis_title="Herramienta",
+        yaxis_title="Total Gastado ($)"
+    )
+
+    st.plotly_chart(fig_gasto, use_container_width=True)
+
+else:
+    st.info("No hay datos para mostrar.")
