@@ -4,14 +4,66 @@ import pandas as pd
 import plotly.express as px
 import base64
 from streamlit_autorefresh import st_autorefresh
-
 # Auto refresh cada 5 segundos
+
+st.set_page_config(page_title="Control Tool Crib CNC", layout="wide")
 st_autorefresh(interval=5000, key="refresh")
+# =========================
+# USUARIOS
+# =========================
+
+
+# =========================
+# FUNCIÓN LOGIN
+# =========================
+def login():
+    st.title("🔐 Iniciar Sesión")
+
+    usuario = st.text_input("Número de Empleado")
+    contraseña = st.text_input("Contraseña", type="password")
+
+    if st.button("Ingresar"):
+
+        conn = sqlite3.connect("toolcrib.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT rol FROM usuarios WHERE empleado=? AND password=?",
+            (usuario, contraseña)
+        )
+
+        resultado = cursor.fetchone()
+        conn.close()
+
+        if resultado:
+            st.session_state["autenticado"] = True
+            st.session_state["usuario"] = usuario
+            st.session_state["rol"] = resultado[0]
+            st.rerun()
+        else:
+            st.error("Usuario o contraseña incorrectos")
+
+# =========================
+# CONTROL DE SESIÓN
+# =========================
+if "autenticado" not in st.session_state:
+    st.session_state["autenticado"] = False
+
+if not st.session_state["autenticado"]:
+    login()
+    st.stop()
+
+# =========================
+# BOTÓN CERRAR SESIÓN
+# =========================
+if st.button("Cerrar sesión"):
+    st.session_state["autenticado"] = False
+    st.rerun()
 
 # =========================
 # CONFIGURACIÓN DE PÁGINA
 # =========================
-st.set_page_config(page_title="Control Tool Crib CNC", layout="wide")
+
 
 # =========================
 # FONDO INDUSTRIAL OSCURO (VERSIÓN ESTABLE)
@@ -58,7 +110,7 @@ st.title("🏭 Sistema de Control de Herramientas CNC")
 # CARGAR BASE DE DATOS
 # =========================
 conn = sqlite3.connect("toolcrib.db")
-df = pd.read_sql_query("SELECT * FROM movimientos", conn)
+df = pd.read_sql_query("SELECT * FROM registros", conn)
 conn.close()
 
 if df.empty:
@@ -88,14 +140,22 @@ with col1:
 with col2:
     maquina_seleccionada = st.selectbox("🏭 Selecciona Máquina", maquinas)
 
-with col3:
-    empleado_seleccionado = st.selectbox("👷 Selecciona Empleado", empleados)
-
+if st.session_state["rol"] == "Supervisor":
+    with col3:
+        empleado_seleccionado = st.selectbox("👷 Selecciona Empleado", empleados)
+else:
+    empleado_seleccionado = st.session_state["usuario"]
 # =========================
 # FILTRAR DATOS DINÁMICO
 # =========================
 df_filtrado = df.copy()
 filtros_aplicados = False
+
+# CONTROL POR ROL
+if st.session_state["rol"] == "Operador":
+    df_filtrado = df_filtrado[
+        df_filtrado["empleado"] == st.session_state["usuario"]
+    ]
 
 if mes_seleccionado != "Todos":
     df_filtrado = df_filtrado[df_filtrado["mes"] == mes_seleccionado]
@@ -272,3 +332,12 @@ if not df_gasto.empty:
 
 else:
     st.info("No hay datos para mostrar.")
+
+
+
+
+
+
+ 
+
+   
