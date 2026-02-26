@@ -1,5 +1,6 @@
 streamlit
 pandas
 plotly
-sqlite3
+supabase
 openpyxl
+streamlit-autorefresh
