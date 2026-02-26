@@ -5,6 +5,12 @@ import plotly.express as px
 import base64
 from streamlit_autorefresh import st_autorefresh
 # Auto refresh cada 5 segundos
+from supabase import create_client
+
+SUPABASE_URL = "https://jkoqclfxupxmudknavco.supabase.co"
+SUPABASE_KEY = "sb_publishable_kZBqiDGMP0lQpQrm-PhYZg_hpkGb_xC"
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 st.set_page_config(page_title="Control Tool Crib CNC", layout="wide")
 st_autorefresh(interval=5000, key="refresh")
@@ -24,25 +30,24 @@ def login():
 
     if st.button("Ingresar"):
 
-        conn = sqlite3.connect("toolcrib.db")
-        cursor = conn.cursor()
+        response = supabase.table("usuarios") \
+            .select("*") \
+            .eq("empleado", usuario) \
+            .eq("password", contraseña) \
+            .execute()
 
-        cursor.execute(
-            "SELECT rol FROM usuarios WHERE empleado=? AND password=?",
-            (usuario, contraseña)
-        )
+        if response.data:
 
-        resultado = cursor.fetchone()
-        conn.close()
+            usuario_data = response.data[0]
 
-        if resultado:
             st.session_state["autenticado"] = True
             st.session_state["usuario"] = usuario
-            st.session_state["rol"] = resultado[0]
+            st.session_state["rol"] = usuario_data["rol"]
+
             st.rerun()
+
         else:
             st.error("Usuario o contraseña incorrectos")
-
 # =========================
 # CONTROL DE SESIÓN
 # =========================
@@ -59,11 +64,6 @@ if not st.session_state["autenticado"]:
 if st.button("Cerrar sesión"):
     st.session_state["autenticado"] = False
     st.rerun()
-
-# =========================
-# CONFIGURACIÓN DE PÁGINA
-# =========================
-
 
 # =========================
 # FONDO INDUSTRIAL OSCURO (VERSIÓN ESTABLE)
@@ -109,9 +109,9 @@ st.title("🏭 Sistema de Control de Herramientas CNC")
 # =========================
 # CARGAR BASE DE DATOS
 # =========================
-conn = sqlite3.connect("toolcrib.db")
-df = pd.read_sql_query("SELECT * FROM registros", conn)
-conn.close()
+response = supabase.table("registros").select("*").execute()
+
+df = pd.DataFrame(response.data)
 
 if df.empty:
     st.warning("No hay registros en la base de datos.")
@@ -336,8 +336,7 @@ else:
 
 
 
-
-
  
 
    
+
