@@ -3,10 +3,11 @@ import sqlite3
 import pandas as pd
 import plotly.express as px
 import base64
+import io
 from streamlit_autorefresh import st_autorefresh
 # Auto refresh cada 5 segundos
 from supabase import create_client
-import io
+
 
 SUPABASE_URL = "https://jkoqclfxupxmudknavco.supabase.co"
 SUPABASE_KEY = "sb_publishable_kZBqiDGMP0lQpQrm-PhYZg_hpkGb_xC"
@@ -358,6 +359,7 @@ else:
  
 
    
+
 
 
 
