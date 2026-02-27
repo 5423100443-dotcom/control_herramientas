@@ -4,6 +4,6 @@ plotly
 supabase
 openpyxl
 streamlit-autorefresh
-io
+
 
 
