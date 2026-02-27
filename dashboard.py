@@ -6,6 +6,7 @@ import base64
 from streamlit_autorefresh import st_autorefresh
 # Auto refresh cada 5 segundos
 from supabase import create_client
+import io
 
 SUPABASE_URL = "https://jkoqclfxupxmudknavco.supabase.co"
 SUPABASE_KEY = "sb_publishable_kZBqiDGMP0lQpQrm-PhYZg_hpkGb_xC"
@@ -357,5 +358,6 @@ else:
  
 
    
+
 
 
