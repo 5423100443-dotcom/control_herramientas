@@ -106,6 +106,24 @@ poner_fondo()
 # =========================
 st.title("🏭 Sistema de Control de Herramientas CNC")
 
+st.markdown("## 💾 Backup de Datos")
+
+if st.button("⬇ Descargar Backup Excel"):
+
+    response = supabase.table("registros").select("*").execute()
+    df_backup = pd.DataFrame(response.data)
+
+    buffer = io.BytesIO()
+
+    df_backup.to_excel(buffer, index=False, engine="openpyxl")
+
+    st.download_button(
+        label="📥 Descargar Archivo",
+        data=buffer.getvalue(),
+        file_name="backup_herramientas.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
 # =========================
 # CARGAR BASE DE DATOS
 # =========================
@@ -339,4 +357,5 @@ else:
  
 
    
+
 
