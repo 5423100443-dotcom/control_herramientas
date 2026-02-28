@@ -7,38 +7,6 @@ from streamlit_autorefresh import st_autorefresh
 # Auto refresh cada 5 segundos
 from supabase import create_client
 
-st.markdown("""
-<style>
-
-/* Ocultar menú */
-#MainMenu {visibility: hidden;}
-
-/* Ocultar footer */
-footer {visibility: hidden;}
-
-/* Ocultar header */
-header {visibility: hidden;}
-
-/* Ocultar botón deploy / corona */
-button[kind="secondary"] {
-    display: none !important;
-}
-
-/* Ocultar contenedor flotante inferior */
-div[data-testid="stToolbar"] {
-    display: none !important;
-}
-
-div[data-testid="stDecoration"] {
-    display: none !important;
-}
-
-div[data-testid="stStatusWidget"] {
-    display: none !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
 
 SUPABASE_URL = "https://jkoqclfxupxmudknavco.supabase.co"
 SUPABASE_KEY = "sb_publishable_kZBqiDGMP0lQpQrm-PhYZg_hpkGb_xC"
@@ -372,6 +340,7 @@ else:
  
 
    
+
 
 
 
