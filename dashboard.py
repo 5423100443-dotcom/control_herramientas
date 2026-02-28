@@ -7,6 +7,16 @@ from streamlit_autorefresh import st_autorefresh
 # Auto refresh cada 5 segundos
 from supabase import create_client
 
+hide_streamlit_style = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+.stDeployButton {display:none;}
+</style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 
 SUPABASE_URL = "https://jkoqclfxupxmudknavco.supabase.co"
 SUPABASE_KEY = "sb_publishable_kZBqiDGMP0lQpQrm-PhYZg_hpkGb_xC"
@@ -340,6 +350,7 @@ else:
  
 
    
+
 
 
 
