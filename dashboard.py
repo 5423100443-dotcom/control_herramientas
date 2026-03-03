@@ -13,7 +13,7 @@ SUPABASE_KEY = "sb_publishable_kZBqiDGMP0lQpQrm-PhYZg_hpkGb_xC"
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-st.set_page_config(page_title="Control Tool Crib CNC", layout="wide")
+st.set_page_config(page_title="Control Tool Crib CNC", page_icon="logo.png", layout="centered" )
 st_autorefresh(interval=5000, key="refresh")
 # =========================
 # USUARIOS
@@ -353,6 +353,7 @@ else:
  
 
    
+
 
 
 
