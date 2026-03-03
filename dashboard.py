@@ -24,31 +24,44 @@ st_autorefresh(interval=5000, key="refresh")
 # FUNCIÓN LOGIN
 # =========================
 def login():
-    st.title("🔐 Iniciar Sesión")
 
-    usuario = st.text_input("Número de Empleado")
-    contraseña = st.text_input("Contraseña", type="password")
+    # Centrar contenido
+    col1, col2, col3 = st.columns([1,2,1])
 
-    if st.button("Ingresar"):
+    with col2:
 
-        response = supabase.table("usuarios") \
-            .select("*") \
-            .eq("empleado", usuario) \
-            .eq("password", contraseña) \
-            .execute()
+        st.image("logo.png", width=220)
 
-        if response.data:
+        st.markdown(
+            "<h2 style='text-align:center;'>Control Tool Crib CNC</h2>",
+            unsafe_allow_html=True
+        )
 
-            usuario_data = response.data[0]
+        st.markdown("---")
 
-            st.session_state["autenticado"] = True
-            st.session_state["usuario"] = usuario
-            st.session_state["rol"] = usuario_data["rol"]
+        usuario = st.text_input("Número de Empleado")
+        contraseña = st.text_input("Contraseña", type="password")
 
-            st.rerun()
+        if st.button("Ingresar", use_container_width=True):
 
-        else:
-            st.error("Usuario o contraseña incorrectos")
+            response = supabase.table("usuarios") \
+                .select("*") \
+                .eq("empleado", usuario) \
+                .eq("password", contraseña) \
+                .execute()
+
+            if response.data:
+
+                usuario_data = response.data[0]
+
+                st.session_state["autenticado"] = True
+                st.session_state["usuario"] = usuario
+                st.session_state["rol"] = usuario_data["rol"]
+
+                st.rerun()
+
+            else:
+                st.error("Usuario o contraseña incorrectos")
 # =========================
 # CONTROL DE SESIÓN
 # =========================
@@ -340,6 +353,7 @@ else:
  
 
    
+
 
 
 
