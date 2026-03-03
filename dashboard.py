@@ -136,6 +136,10 @@ if not st.session_state["autenticado"]:
     login()
     st.stop()
 
+if st.session_state["mostrar_bienvenida"]:
+    bienvenida()
+    st.stop()
+
 # =========================
 # BOTÓN CERRAR SESIÓN
 # =========================
@@ -417,6 +421,7 @@ else:
  
 
    
+
 
 
 
