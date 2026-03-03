@@ -6,6 +6,7 @@ import base64
 from streamlit_autorefresh import st_autorefresh
 # Auto refresh cada 5 segundos
 from supabase import create_client
+import time
 
 
 SUPABASE_URL = "https://jkoqclfxupxmudknavco.supabase.co"
@@ -55,6 +56,7 @@ def login():
                 usuario_data = response.data[0]
 
                 st.session_state["autenticado"] = True
+                st.session_state["mostrar_bienvenida"] = True
                 st.session_state["usuario"] = usuario
                 st.session_state["rol"] = usuario_data["rol"]
 
@@ -63,10 +65,72 @@ def login():
             else:
                 st.error("Usuario o contraseña incorrectos")
 # =========================
+#Funcion de Bienvenida
+# =========================
+def bienvenida():
+
+    # Cargar logo en base64
+    with open("fondo_cnc.png", "rb") as f:
+        fondo = base64.b64encode(f.read()).decode()
+
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/png;base64,{fondo}");
+            background-size: cover;
+            background-position: center;
+        }}
+
+        .bienvenida-box {{
+            text-align: center;
+            margin-top: 150px;
+            background-color: rgba(0,0,0,0.75);
+            padding: 40px;
+            border-radius: 20px;
+            color: white;
+        }}
+
+        .titulo {{
+            font-size: 48px;
+            font-weight: bold;
+        }}
+
+        .usuario {{
+            font-size: 28px;
+            color: #00d4ff;
+        }}
+        </style>
+
+        <div class="bienvenida-box">
+            <div class="titulo">CONTROL TOOL CRIB CNC</div>
+            <br>
+            <div class="usuario">Bienvenido {st.session_state["usuario"]}</div>
+            <br>
+            <div>Cargando sistema...</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    progress_bar = st.progress(0)
+
+    for i in range(100):
+        time.sleep(0.02)
+        progress_bar.progress(i + 1)
+
+    time.sleep(0.5)
+
+    st.session_state["mostrar_bienvenida"] = False
+    st.rerun()
+
+# =========================
 # CONTROL DE SESIÓN
 # =========================
 if "autenticado" not in st.session_state:
     st.session_state["autenticado"] = False
+if "mostrar_bienvenida" not in st.session_state:
+    st.session_state["mostrar_bienvenida"] = False
 
 if not st.session_state["autenticado"]:
     login()
@@ -353,6 +417,7 @@ else:
  
 
    
+
 
 
 
