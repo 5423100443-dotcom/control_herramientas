@@ -34,17 +34,6 @@ if "rol" not in st.session_state:
 if st.session_state["autenticado"]:
     st_autorefresh(interval=10000, key="refresh")
     
-# =========================
-# FLUJO PRINCIPAL
-# =========================
-
-if not st.session_state["autenticado"]:
-    login()
-    st.stop()
-
-if st.session_state["mostrar_bienvenida"]:
-    bienvenida()
-    st.stop()
 
 
 # =========================
@@ -162,6 +151,21 @@ def bienvenida():
 
     st.session_state["mostrar_bienvenida"] = False
     st.rerun()
+
+# =========================
+# FLUJO PRINCIPAL
+# =========================
+
+if not st.session_state["autenticado"]:
+    login()
+    st.stop()
+
+if st.session_state["mostrar_bienvenida"]:
+    bienvenida()
+    st.stop()
+
+
+
 
 # =========================
 # FONDO INDUSTRIAL OSCURO (VERSIÓN ESTABLE)
@@ -437,6 +441,7 @@ else:
  
 
    
+
 
 
 
