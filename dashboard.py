@@ -124,7 +124,7 @@ def bienvenida():
     progress = st.progress(0)
 
     for i in range(100):
-        time.sleep(0.04)   # 👈 más lento (4 segundos aprox)
+        time.sleep(0.02)   # 👈 más lento (4 segundos aprox)
         progress.progress(i + 1)
 
     time.sleep(1)
@@ -428,6 +428,7 @@ else:
  
 
    
+
 
 
 
