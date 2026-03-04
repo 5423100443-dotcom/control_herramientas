@@ -165,7 +165,12 @@ if st.session_state["mostrar_bienvenida"]:
     st.stop()
 
 
-
+# =========================
+# BOTÓN CERRAR SESIÓN
+# =========================
+if st.button("Cerrar sesión"):
+    st.session_state["autenticado"] = False
+    st.rerun()
 
 # =========================
 # FONDO INDUSTRIAL OSCURO (VERSIÓN ESTABLE)
@@ -441,6 +446,7 @@ else:
  
 
    
+
 
 
 
