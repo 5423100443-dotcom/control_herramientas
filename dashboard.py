@@ -74,7 +74,6 @@ def bienvenida():
     import base64
     import time
 
-    # Cargar imagen
     with open("bienvenida2.png", "rb") as f:
         img = base64.b64encode(f.read()).decode()
 
@@ -96,62 +95,48 @@ def bienvenida():
             background: rgba(0,0,0,0.65);
         }}
 
-        .content {{
+        .center-box {{
             position: fixed;
-            bottom: 12%;
-            width: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
             color: white;
-            font-family: sans-serif;
+            font-family: 'Segoe UI', sans-serif;
+        }}
+
+        .titulo {{
+            font-size: 60px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
         }}
 
         .empleado {{
             font-size: 28px;
-            font-weight: 500;
+            font-weight: 400;
             letter-spacing: 2px;
+            opacity: 0.9;
         }}
         </style>
 
         <div class="overlay"></div>
 
-        <div class="content">
-            <div class="empleado">
-                Empleado: {st.session_state["usuario"]}
-            </div>
+        <div class="center-box">
+            <div class="titulo">BIENVENIDO</div>
+            <div class="empleado">Empleado: {st.session_state["usuario"]}</div>
         </div>
     """, unsafe_allow_html=True)
 
     progress = st.progress(0)
 
     for i in range(100):
-        time.sleep(0.04)  # dura aprox 4 segundos
+        time.sleep(0.03)
         progress.progress(i + 1)
 
-    time.sleep(1)
+    time.sleep(0.5)
 
     st.session_state["mostrar_bienvenida"] = False
-    st.rerun()
-# =========================
-# CONTROL DE SESIÓN
-# =========================
-if "autenticado" not in st.session_state:
-    st.session_state["autenticado"] = False
-if "mostrar_bienvenida" not in st.session_state:
-    st.session_state["mostrar_bienvenida"] = False
-
-if not st.session_state["autenticado"]:
-    login()
-    st.stop()
-
-if st.session_state["mostrar_bienvenida"]:
-    bienvenida()
-    st.stop()
-
-# =========================
-# BOTÓN CERRAR SESIÓN
-# =========================
-if st.button("Cerrar sesión"):
-    st.session_state["autenticado"] = False
     st.rerun()
 
 # =========================
@@ -428,6 +413,7 @@ else:
  
 
    
+
 
 
 
