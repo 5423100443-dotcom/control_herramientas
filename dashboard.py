@@ -69,61 +69,68 @@ def login():
 # =========================
 def bienvenida():
 
-    # Cargar logo en base64
-    with open("fondo_cnc.png", "rb") as f:
-        fondo = base64.b64encode(f.read()).decode()
-
-    st.markdown(
-        f"""
+    st.markdown("""
         <style>
-        .stApp {{
-            background-image: url("data:image/png;base64,{fondo}");
-            background-size: cover;
-            background-position: center;
-        }}
+        .stApp {
+            background: linear-gradient(
+                rgba(10,10,10,0.95),
+                rgba(20,20,20,0.95)
+            );
+        }
 
-        .bienvenida-box {{
+        .welcome-container {
             text-align: center;
-            margin-top: 150px;
-            background-color: rgba(0,0,0,0.75);
-            padding: 40px;
-            border-radius: 20px;
+            margin-top: 18vh;
+            padding: 50px;
+        }
+
+        .welcome-title {
+            font-size: 46px;
+            font-weight: 700;
             color: white;
-        }}
+            letter-spacing: 2px;
+        }
 
-        .titulo {{
-            font-size: 48px;
-            font-weight: bold;
-        }}
+        .welcome-user {
+            font-size: 26px;
+            color: #00c6ff;
+            margin-top: 15px;
+        }
 
-        .usuario {{
-            font-size: 28px;
-            color: #00d4ff;
-        }}
+        .welcome-role {
+            font-size: 16px;
+            color: #aaaaaa;
+            margin-top: 5px;
+        }
+
+        .welcome-sub {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #dddddd;
+        }
         </style>
+    """, unsafe_allow_html=True)
 
-        <div class="bienvenida-box">
-            <div class="titulo">CONTROL TOOL CRIB CNC</div>
-            <br>
-            <div class="usuario">Bienvenido {st.session_state["usuario"]}</div>
-            <br>
-            <div>Cargando sistema...</div>
+    st.markdown(f"""
+        <div class="welcome-container">
+            <div class="welcome-title">CONTROL TOOL CRIB CNC</div>
+            <div class="welcome-user">Bienvenido {st.session_state["usuario"]}</div>
+            <div class="welcome-role">Rol: {st.session_state["rol"]}</div>
+            <div class="welcome-sub">Inicializando sistema...</div>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
-    progress_bar = st.progress(0)
+    # Barra más elegante
+    progress = st.progress(0)
 
     for i in range(100):
-        time.sleep(0.02)
-        progress_bar.progress(i + 1)
+        time.sleep(0.04)   # 👈 más lento (4 segundos aprox)
+        progress.progress(i + 1)
 
-    time.sleep(0.5)
+    time.sleep(1)
 
     st.session_state["mostrar_bienvenida"] = False
     st.rerun()
-
 # =========================
 # CONTROL DE SESIÓN
 # =========================
@@ -421,6 +428,7 @@ else:
  
 
    
+
 
 
 
