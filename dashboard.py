@@ -72,62 +72,62 @@ def bienvenida():
     st.markdown("""
         <style>
         .stApp {
-            background: linear-gradient(
-                rgba(10,10,10,0.95),
-                rgba(20,20,20,0.95)
-            );
+            background-color: #0f1117;
         }
 
-        .welcome-container {
+        .container {
             text-align: center;
-            margin-top: 18vh;
-            padding: 50px;
+            margin-top: 20vh;
         }
 
-        .welcome-title {
-            font-size: 46px;
-            font-weight: 700;
-            color: white;
-            letter-spacing: 2px;
+        .logo {
+            margin-bottom: 30px;
         }
 
-        .welcome-user {
-            font-size: 26px;
-            color: #00c6ff;
-            margin-top: 15px;
+        .title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 1px;
         }
 
-        .welcome-role {
-            font-size: 16px;
-            color: #aaaaaa;
-            margin-top: 5px;
+        .user {
+            font-size: 20px;
+            color: #4da6ff;
+            margin-top: 10px;
         }
 
-        .welcome-sub {
+        .role {
+            font-size: 14px;
+            color: #888888;
+            margin-top: 4px;
+        }
+
+        .status {
+            font-size: 14px;
+            color: #bbbbbb;
             margin-top: 30px;
-            font-size: 18px;
-            color: #dddddd;
         }
         </style>
     """, unsafe_allow_html=True)
 
     st.markdown(f"""
-        <div class="welcome-container">
-            <div class="welcome-title">CONTROL TOOL CRIB CNC</div>
-            <div class="welcome-user">Bienvenido {st.session_state["usuario"]}</div>
-            <div class="welcome-role">Rol: {st.session_state["rol"]}</div>
-            <div class="welcome-sub">Inicializando sistema...</div>
+        <div class="container">
+            <div class="logo">
+                <img src="https://img.icons8.com/ios-filled/100/4da6ff/factory.png"/>
+            </div>
+            <div class="title">Control Tool Crib CNC</div>
+            <div class="user">{st.session_state["usuario"]}</div>
+            <div class="role">{st.session_state["rol"]}</div>
+            <div class="status">Cargando entorno de trabajo...</div>
         </div>
     """, unsafe_allow_html=True)
 
-    # Barra más elegante
     progress = st.progress(0)
 
     for i in range(100):
-        time.sleep(0.02)   # 👈 más lento (4 segundos aprox)
+        time.sleep(0.03)  # ~3 segundos
         progress.progress(i + 1)
-
-    time.sleep(1)
 
     st.session_state["mostrar_bienvenida"] = False
     st.rerun()
@@ -428,6 +428,7 @@ else:
  
 
    
+
 
 
 
