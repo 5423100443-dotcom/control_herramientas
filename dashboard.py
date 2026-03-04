@@ -75,7 +75,7 @@ def bienvenida():
     import time
 
     # Cargar imagen
-    with open("bienvenida.png", "rb") as f:
+    with open("bienvenida2.png", "rb") as f:
         img = base64.b64encode(f.read()).decode()
 
     st.markdown(f"""
@@ -428,6 +428,7 @@ else:
  
 
    
+
 
 
 
