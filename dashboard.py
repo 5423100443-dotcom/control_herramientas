@@ -15,12 +15,36 @@ SUPABASE_KEY = "sb_publishable_kZBqiDGMP0lQpQrm-PhYZg_hpkGb_xC"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 st.set_page_config(page_title="Control Tool Crib CNC", page_icon="logo.png", layout="centered" )
-if not st.session_state.get("mostrar_bienvenida", False):
+# =========================
+# CONTROL DE SESIÓN SEGURO
+# =========================
+if "autenticado" not in st.session_state:
+    st.session_state["autenticado"] = False
+
+if "mostrar_bienvenida" not in st.session_state:
+    st.session_state["mostrar_bienvenida"] = False
+
+if "usuario" not in st.session_state:
+    st.session_state["usuario"] = None
+
+if "rol" not in st.session_state:
+    st.session_state["rol"] = None
+    
+# Autorefresh SOLO si está autenticado
+if st.session_state["autenticado"]:
     st_autorefresh(interval=10000, key="refresh")
     
 # =========================
-# USUARIOS
+# FLUJO PRINCIPAL
 # =========================
+
+if not st.session_state["autenticado"]:
+    login()
+    st.stop()
+
+if st.session_state["mostrar_bienvenida"]:
+    bienvenida()
+    st.stop()
 
 
 # =========================
@@ -214,7 +238,7 @@ with col1:
 with col2:
     maquina_seleccionada = st.selectbox("🏭 Selecciona Máquina", maquinas)
 
-if st.session_state["rol"] == "Supervisor":
+if st.session_state.get("rol") == "Supervisor":
     with col3:
         empleado_seleccionado = st.selectbox("👷 Selecciona Empleado", empleados)
 else:
@@ -226,7 +250,7 @@ df_filtrado = df.copy()
 filtros_aplicados = False
 
 # CONTROL POR ROL
-if st.session_state["rol"] == "Operador":
+if st.session_state.get("rol") == "Operador":
     df_filtrado = df_filtrado[
         df_filtrado["empleado"] == st.session_state["usuario"]
     ]
@@ -413,6 +437,7 @@ else:
  
 
    
+
 
 
 
