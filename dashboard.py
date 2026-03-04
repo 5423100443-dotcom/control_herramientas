@@ -69,65 +69,63 @@ def login():
 # =========================
 def bienvenida():
 
-    st.markdown("""
-        <style>
-        .stApp {
-            background-color: #0f1117;
-        }
+    import base64
+    import time
 
-        .container {
-            text-align: center;
-            margin-top: 20vh;
-        }
-
-        .logo {
-            margin-bottom: 30px;
-        }
-
-        .title {
-            font-size: 32px;
-            font-weight: 600;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-
-        .user {
-            font-size: 20px;
-            color: #4da6ff;
-            margin-top: 10px;
-        }
-
-        .role {
-            font-size: 14px;
-            color: #888888;
-            margin-top: 4px;
-        }
-
-        .status {
-            font-size: 14px;
-            color: #bbbbbb;
-            margin-top: 30px;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+    # Cargar imagen
+    with open("bienvenida.png", "rb") as f:
+        img = base64.b64encode(f.read()).decode()
 
     st.markdown(f"""
-        <div class="container">
-            <div class="logo">
-                <img src="https://img.icons8.com/ios-filled/100/4da6ff/factory.png"/>
+        <style>
+        .stApp {{
+            background-image: url("data:image/png;base64,{img}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+
+        .overlay {{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.65);
+        }}
+
+        .content {{
+            position: fixed;
+            bottom: 12%;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-family: sans-serif;
+        }}
+
+        .empleado {{
+            font-size: 28px;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }}
+        </style>
+
+        <div class="overlay"></div>
+
+        <div class="content">
+            <div class="empleado">
+                Empleado: {st.session_state["usuario"]}
             </div>
-            <div class="title">Control Tool Crib CNC</div>
-            <div class="user">{st.session_state["usuario"]}</div>
-            <div class="role">{st.session_state["rol"]}</div>
-            <div class="status">Cargando entorno de trabajo...</div>
         </div>
     """, unsafe_allow_html=True)
 
     progress = st.progress(0)
 
     for i in range(100):
-        time.sleep(0.03)  # ~3 segundos
+        time.sleep(0.04)  # dura aprox 4 segundos
         progress.progress(i + 1)
+
+    time.sleep(1)
 
     st.session_state["mostrar_bienvenida"] = False
     st.rerun()
@@ -428,6 +426,7 @@ else:
  
 
    
+
 
 
 
