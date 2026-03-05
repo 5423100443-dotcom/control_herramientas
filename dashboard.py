@@ -267,8 +267,9 @@ with tab_dashboard:
     else:
         empleado = st.session_state["usuario"]
 
-    df_filtrado = df.copy()
-       # FILTRO MES
+   df_filtrado = df.copy()
+
+    # FILTRO MES
     if mes != "Seleccionar":
         df_filtrado = df_filtrado[df_filtrado["mes"] == mes]
     
@@ -279,10 +280,11 @@ with tab_dashboard:
     # FILTRO EMPLEADO
     if empleado != "Seleccionar":
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
-
+    
+    # SI NO HAY FILTROS
     if mes == "Seleccionar" and maquina == "Seleccionar" and empleado == "Seleccionar":
         st.warning("🔎 Selecciona al menos un filtro para mostrar información.")
-        st.stop()
+        st.stop()stop()
 
     if rol == "operador":
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
@@ -401,6 +403,7 @@ if rol == "supervisor":
  
 
    
+
 
 
 
