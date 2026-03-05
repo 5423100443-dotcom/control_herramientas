@@ -269,22 +269,27 @@ with tab_dashboard:
 
    df_filtrado = df.copy()
 
-    # FILTRO MES
-    if mes != "Seleccionar":
-        df_filtrado = df_filtrado[df_filtrado["mes"] == mes]
+    if mes_seleccionado != "Seleccionar":
+        df_filtrado = df_filtrado[df_filtrado["mes"] == mes_seleccionado]
+        filtros_aplicados = True
     
-    # FILTRO MAQUINA
-    if maquina != "Seleccionar":
-        df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina]
+    if maquina_seleccionada != "Seleccionar":
+        df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina_seleccionada]
+        filtros_aplicados = True
     
-    # FILTRO EMPLEADO
-    if empleado != "Seleccionar":
-        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
+    if empleado_seleccionado != "Seleccionar":
+        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado_seleccionado]
+        filtros_aplicados = True
     
-    # SI NO HAY FILTROS
-    if mes == "Seleccionar" and maquina == "Seleccionar" and empleado == "Seleccionar":
-        st.warning("🔎 Selecciona al menos un filtro para mostrar información.")
-        st.stop()stop()
+    # 🚫 Si no hay filtros, no mostrar nada
+    if not filtros_aplicados:
+        st.info("Selecciona al menos un filtro para mostrar información.")
+        st.stop()
+    
+    if df_filtrado.empty:
+        st.warning("No hay datos con los filtros seleccionados.")
+        st.stop()
+   
 
     if rol == "operador":
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
@@ -403,6 +408,7 @@ if rol == "supervisor":
  
 
    
+
 
 
 
