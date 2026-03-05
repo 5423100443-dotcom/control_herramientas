@@ -280,6 +280,10 @@ with tab_dashboard:
     if empleado != "Seleccionar":
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
 
+    if mes == "Seleccionar" and maquina == "Seleccionar" and empleado == "Seleccionar":
+        st.warning("🔎 Selecciona al menos un filtro para mostrar información.")
+        st.stop()
+
     if rol == "operador":
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
 
@@ -397,6 +401,7 @@ if rol == "supervisor":
  
 
    
+
 
 
 
