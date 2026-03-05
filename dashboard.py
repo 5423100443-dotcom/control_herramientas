@@ -42,7 +42,7 @@ if "rol" not in st.session_state:
     st.session_state["rol"] = None
 
 # refresh automático
-if st.session_state["autenticado"]:
+if st.session_state["autenticado"] and not st.session_state["mostrar_bienvenida"]:
     st_autorefresh(interval=10000, key="refresh")
 
 # =========================
@@ -472,6 +472,10 @@ if rol in ["toolcrib","supervisor"]:
         .execute()
 
         df_sol = pd.DataFrame(response.data)
+        pendientes = len(df_sol)
+        st.subheader(f"solicitudes({pendientes})")
+        if pendientes > 0:
+            st.warning(f"Hay {pendientes} solicitudes pendientes")
 
         if df_sol.empty:
             st.info("No hay solicitudes")
@@ -483,22 +487,31 @@ if rol in ["toolcrib","supervisor"]:
                 col1,col2,col3 = st.columns([2,2,1])
 
                 with col1:
-                    st.write("Empleado:",row["empleado"])
-                    st.write("Máquina:",row["maquina"])
+
+                    st.markdown(f"""
+                    👷 *Empleado:* {row["empleado"]}  
+                    🏭 *Máquina:* {row["maquina"]}  
+                    🔧 *Herramienta:* {row["herramienta"]}
+                    """)
 
                 with col2:
-                    st.write("Herramienta:", row["herramienta"])
-                    
-                    # tipo de cambio
-                    if row["tipo_cambio"] == "Herramienta completa":
-                        st.write("Tipo:", "Herramienta completa")
+
+                    tipo = str(row["tipo_cambio"]).lower()
                 
-                    elif row["tipo_cambio"] == "Solo Inserto":
-                        st.write("Tipo:", "Solo Insertos")
-                        st.write("Tipo de inserto:", row["descripcion"])
-                        st.write("Cantidad de insertos:", row["cantidad_insertos"])
+                    if "inserto" in tipo:
                 
-                    st.write("Motivo:", row["motivo"])
+                        st.info(f"""
+                🔩 *Solicitud de Insertos*
+                
+                *Inserto:* {row["descripcion"]}  
+                *Cantidad:* {row["cantidad_insertos"]}
+                """)
+
+    else:
+
+        st.success("🛠 *Herramienta completa*")
+
+    st.write("Motivo:",row["motivo"])
 
                 with col3:
 
@@ -532,6 +545,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
