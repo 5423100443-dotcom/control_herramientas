@@ -251,9 +251,9 @@ with tab_dashboard:
 
     col1,col2,col3 = st.columns(3)
 
-    meses = ["Todos"] + sorted(df["mes"].unique(), reverse=True)
-    maquinas = ["Todas"] + sorted(df["maquina"].unique())
-    empleados = ["Todos"] + sorted(df["empleado"].unique())
+    meses = ["Seleccionar"] + sorted(df["mes"].unique(), reverse=True)
+    maquinas = ["Seleccionar"] + sorted(df["maquina"].unique())
+    empleados = ["Seleccionar"] + sorted(df["empleado"].unique())
 
     with col1:
         mes = st.selectbox("Mes", meses)
@@ -389,6 +389,7 @@ if rol == "supervisor":
  
 
    
+
 
 
 
