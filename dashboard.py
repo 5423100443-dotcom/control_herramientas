@@ -7,11 +7,11 @@ from supabase import create_client
 import time
 
 # =========================
-# SUPABASE
+# SUPABASE (SECRETS)
 # =========================
 
-SUPABASE_URL = "https://jkoqclfxupxmudknavco.supabase.co"
-SUPABASE_KEY = "re_9nMzqhtD_4QuJn3jcFts5wBUNWVFwgZRj"
+SUPABASE_URL = st.secrets["SUPABASE_URL"]
+SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -64,30 +64,37 @@ def login():
 
         st.markdown("---")
 
-        .eq("empleado", str(usuario))
+        usuario = st.text_input("Número de Empleado")
         password = st.text_input("Contraseña", type="password")
 
         if st.button("Ingresar", use_container_width=True):
 
-            response = supabase.table("usuarios") \
-                .select("*") \
-                .eq("empleado", usuario) \
-                .eq("password", password) \
-                .execute()
+            try:
 
-            if response.data:
+                response = supabase.table("usuarios") \
+                    .select("*") \
+                    .eq("empleado", usuario) \
+                    .eq("password", password) \
+                    .execute()
 
-                usuario_data = response.data[0]
+                if response.data:
 
-                st.session_state["autenticado"] = True
-                st.session_state["mostrar_bienvenida"] = True
-                st.session_state["usuario"] = usuario
-                st.session_state["rol"] = usuario_data["rol"]
+                    usuario_data = response.data[0]
 
-                st.rerun()
+                    st.session_state["autenticado"] = True
+                    st.session_state["mostrar_bienvenida"] = True
+                    st.session_state["usuario"] = usuario
+                    st.session_state["rol"] = usuario_data["rol"].lower()
 
-            else:
-                st.error("Usuario o contraseña incorrectos")
+                    st.rerun()
+
+                else:
+                    st.error("Usuario o contraseña incorrectos")
+
+            except Exception as e:
+
+                st.error("Error conectando con la base de datos")
+                st.write(e)
 
 # =========================
 # BIENVENIDA
@@ -205,18 +212,18 @@ rol = st.session_state["rol"]
 # TABS SEGUN ROL
 # =========================
 
-if rol == "Operador":
+if rol == "operador":
 
     tab_dashboard = st.tabs(["📊 Dashboard"])[0]
 
-elif rol == "Toolcrib":
+elif rol == "toolcrib":
 
     tab_solicitudes, tab_dashboard = st.tabs([
         "📦 Solicitudes",
         "📊 Dashboard"
     ])
 
-elif rol == "Supervisor":
+elif rol == "supervisor":
 
     tab_dashboard, tab_solicitudes, tab_empleados = st.tabs([
         "📊 Dashboard",
@@ -254,7 +261,7 @@ with tab_dashboard:
     with col2:
         maquina = st.selectbox("Máquina", maquinas)
 
-    if rol == "Supervisor":
+    if rol == "supervisor":
         with col3:
             empleado = st.selectbox("Empleado", empleados)
     else:
@@ -262,7 +269,7 @@ with tab_dashboard:
 
     df_filtrado = df.copy()
 
-    if rol == "Operador":
+    if rol == "operador":
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
 
     if mes != "Todos":
@@ -273,6 +280,8 @@ with tab_dashboard:
 
     if empleado != "Todos":
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
+
+    df_filtrado = df_filtrado.sort_values("fecha", ascending=False)
 
     st.markdown("## 📌 Resumen")
 
@@ -292,7 +301,7 @@ with tab_dashboard:
 # TOOLCRIB
 # =========================
 
-if rol in ["Toolcrib","Supervisor"]:
+if rol in ["toolcrib","supervisor"]:
 
     with tab_solicitudes:
 
@@ -351,7 +360,10 @@ if rol in ["Toolcrib","Supervisor"]:
 # SUPERVISOR EMPLEADOS
 # =========================
 
-if rol == "Supervisor":
+if rol == "supervisor":
+
+    response = supabase.table("registros").select("*").execute()
+    df = pd.DataFrame(response.data)
 
     with tab_empleados:
 
@@ -367,14 +379,14 @@ if rol == "Supervisor":
 
                 df_emp = df[df["empleado"] == emp]
 
-                st.dataframe(df_emp)
-
+                st.dataframe(df_emp
 
 
 
  
 
    
+
 
 
 
