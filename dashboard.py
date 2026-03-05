@@ -227,8 +227,7 @@ elif rol == "supervisor":
 
     tab_dashboard, tab_solicitudes, tab_empleados = st.tabs([
         "📊 Dashboard",
-        "📦 Tool Crib",
-        "👷 Empleados"
+        "📦 Tool Crib"
     ])
 
 # =========================
@@ -517,36 +516,14 @@ if rol in ["toolcrib","supervisor"]:
 
                         st.rerun()
 
-# =========================
-# SUPERVISOR EMPLEADOS
-# =========================
 
-if rol == "supervisor":
-
-    response = supabase.table("registros").select("*").execute()
-    df = pd.DataFrame(response.data)
-
-    with tab_empleados:
-
-        st.subheader("👷 Historial empleados")
-
-        empleados_lista = sorted(df["empleado"].unique())
-
-        tabs_emp = st.tabs([f"Empleado {e}" for e in empleados_lista])
-
-        for i,emp in enumerate(empleados_lista):
-
-            with tabs_emp[i]:
-
-                df_emp = df[df["empleado"] == emp]
-
-                st.dataframe(df_emp)
 
 
 
  
 
    
+
 
 
 
