@@ -487,8 +487,18 @@ if rol in ["toolcrib","supervisor"]:
                     st.write("Máquina:",row["maquina"])
 
                 with col2:
-                    st.write("Herramienta:",row["herramienta"])
-                    st.write("Motivo:",row["motivo"])
+                    st.write("Herramienta:", row["herramienta"])
+                    
+                    # tipo de cambio
+                    if row["tipo_cambio"] == "Herramienta completa":
+                        st.write("Tipo:", "Herramienta completa")
+                
+                    elif row["tipo_cambio"] == "Solo inserto":
+                        st.write("Tipo:", "Solo insertos")
+                        st.write("Tipo de inserto:", row["descripcion"])
+                        st.write("Cantidad de insertos:", row["cantidad_insertos"])
+                
+                    st.write("Motivo:", row["motivo"])
 
                 with col3:
 
@@ -522,6 +532,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
