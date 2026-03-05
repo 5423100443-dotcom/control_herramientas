@@ -267,32 +267,26 @@ with tab_dashboard:
     else:
         empleado = st.session_state["usuario"]
     df_filtrado = df.copy()
-    
-    filtros_aplicados = False
-    
-    if mes != "Seleccionar":
-        df_filtrado = df_filtrado[df_filtrado["mes"] == mes]
-        filtros_aplicados = True
-    
-    if maquina != "Seleccionar":
-        df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina]
-        filtros_aplicados = True
-    
-    if empleado != "Seleccionar":
-        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
-        filtros_aplicados = True
-    
-    # 🚫 Si no hay filtros
-    if not filtros_aplicados:
+
+    # verificar si hay filtros
+    if mes == "Seleccionar" and maquina == "Seleccionar" and empleado == "Seleccionar":
         st.info("Selecciona al menos un filtro para mostrar información.")
         st.stop()
     
-    # Si no hay resultados
+    # aplicar filtros
+    if mes != "Seleccionar":
+        df_filtrado = df_filtrado[df_filtrado["mes"] == mes]
+    
+    if maquina != "Seleccionar":
+        df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina]
+    
+    if empleado != "Seleccionar":
+        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
+    
+    # verificar si quedó vacío
     if df_filtrado.empty:
         st.warning("No hay datos con los filtros seleccionados.")
         st.stop()
-    
-    df_filtrado = df_filtrado.sort_values("fecha", ascending=False)
 
 # =========================
 # TOOLCRIB
@@ -383,6 +377,7 @@ if rol == "supervisor":
  
 
    
+
 
 
 
