@@ -64,7 +64,7 @@ def login():
 
         st.markdown("---")
 
-        usuario = st.text_input("Número de Empleado")
+        .eq("empleado", str(usuario))
         password = st.text_input("Contraseña", type="password")
 
         if st.button("Ingresar", use_container_width=True):
@@ -375,6 +375,7 @@ if rol == "Supervisor":
  
 
    
+
 
 
 
