@@ -266,9 +266,10 @@ with tab_dashboard:
             empleado = st.selectbox("Empleado", empleados)
     else:
         empleado = st.session_state["usuario"]
-
     df_filtrado = df.copy()
+    
     filtros_aplicados = False
+    
     if mes != "Seleccionar":
         df_filtrado = df_filtrado[df_filtrado["mes"] == mes]
         filtros_aplicados = True
@@ -281,43 +282,17 @@ with tab_dashboard:
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
         filtros_aplicados = True
     
-    # 🚫 Si no hay filtros, no mostrar nada
+    # 🚫 Si no hay filtros
     if not filtros_aplicados:
         st.info("Selecciona al menos un filtro para mostrar información.")
         st.stop()
     
+    # Si no hay resultados
     if df_filtrado.empty:
         st.warning("No hay datos con los filtros seleccionados.")
         st.stop()
-
-        
-    if rol == "operador":
-        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
-
-    if mes != "Todos":
-        df_filtrado = df_filtrado[df_filtrado["mes"] == mes]
-
-    if maquina != "Todas":
-        df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina]
-
-    if empleado != "Todos":
-        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
-
+    
     df_filtrado = df_filtrado.sort_values("fecha", ascending=False)
-
-    st.markdown("## 📌 Resumen")
-
-    col1,col2 = st.columns(2)
-
-    with col1:
-        st.metric("💰 Total Gastado", f"${df_filtrado['precio'].sum():,.2f}")
-
-    with col2:
-        st.metric("🔧 Cambios", len(df_filtrado))
-
-    st.markdown("## 📋 Historial")
-
-    st.dataframe(df_filtrado)
 
 # =========================
 # TOOLCRIB
@@ -408,6 +383,7 @@ if rol == "supervisor":
  
 
    
+
 
 
 
