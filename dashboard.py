@@ -11,7 +11,7 @@ import time
 # =========================
 
 SUPABASE_URL = "https://jkoqclfxupxmudknavco.supabase.co"
-SUPABASE_KEY = "TU_API_KEY"
+SUPABASE_KEY = "re_9nMzqhtD_4QuJn3jcFts5wBUNWVFwgZRj"
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -375,6 +375,7 @@ if rol == "Supervisor":
  
 
    
+
 
 
 
