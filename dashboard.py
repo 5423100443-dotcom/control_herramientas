@@ -493,8 +493,8 @@ if rol in ["toolcrib","supervisor"]:
                     if row["tipo_cambio"] == "Herramienta completa":
                         st.write("Tipo:", "Herramienta completa")
                 
-                    elif row["tipo_cambio"] == "Solo inserto":
-                        st.write("Tipo:", "Solo insertos")
+                    elif row["tipo_cambio"] == "Solo Inserto":
+                        st.write("Tipo:", "Solo Insertos")
                         st.write("Tipo de inserto:", row["descripcion"])
                         st.write("Cantidad de insertos:", row["cantidad_insertos"])
                 
@@ -532,6 +532,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
