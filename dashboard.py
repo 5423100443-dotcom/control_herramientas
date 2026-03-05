@@ -225,7 +225,7 @@ elif rol == "toolcrib":
 
 elif rol == "supervisor":
 
-    tab_dashboard, tab_solicitudes, tab_empleados = st.tabs([
+    tab_dashboard, tab_solicitudes = st.tabs([
         "📊 Dashboard",
         "📦 Tool Crib"
     ])
@@ -523,6 +523,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
