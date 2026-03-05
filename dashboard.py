@@ -1,23 +1,34 @@
 import streamlit as st
-import sqlite3
 import pandas as pd
 import plotly.express as px
 import base64
 from streamlit_autorefresh import st_autorefresh
-# Auto refresh cada 5 segundos
 from supabase import create_client
 import time
 
+# =========================
+# SUPABASE
+# =========================
 
 SUPABASE_URL = "https://jkoqclfxupxmudknavco.supabase.co"
-SUPABASE_KEY = "sb_publishable_kZBqiDGMP0lQpQrm-PhYZg_hpkGb_xC"
+SUPABASE_KEY = "TU_API_KEY"
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-st.set_page_config(page_title="Control Tool Crib CNC", page_icon="logo.png", layout="centered" )
 # =========================
-# CONTROL DE SESIÓN SEGURO
+# CONFIG STREAMLIT
 # =========================
+
+st.set_page_config(
+    page_title="Control Tool Crib CNC",
+    page_icon="logo.png",
+    layout="centered"
+)
+
+# =========================
+# CONTROL DE SESIÓN
+# =========================
+
 if "autenticado" not in st.session_state:
     st.session_state["autenticado"] = False
 
@@ -29,41 +40,39 @@ if "usuario" not in st.session_state:
 
 if "rol" not in st.session_state:
     st.session_state["rol"] = None
-    
-# Autorefresh SOLO si está autenticado
+
+# refresh automático
 if st.session_state["autenticado"]:
     st_autorefresh(interval=10000, key="refresh")
-    
-
 
 # =========================
-# FUNCIÓN LOGIN
+# LOGIN
 # =========================
+
 def login():
 
-    # Centrar contenido
-    col1, col2, col3 = st.columns([1,2,1])
+    col1,col2,col3 = st.columns([1,2,1])
 
     with col2:
 
         st.image("logo.png", width=220)
 
         st.markdown(
-            "<h2 style='text-align:center;'>Control Tool Crib CNC</h2>",
-            unsafe_allow_html=True
+        "<h2 style='text-align:center;'>Control Tool Crib CNC</h2>",
+        unsafe_allow_html=True
         )
 
         st.markdown("---")
 
         usuario = st.text_input("Número de Empleado")
-        contraseña = st.text_input("Contraseña", type="password")
+        password = st.text_input("Contraseña", type="password")
 
         if st.button("Ingresar", use_container_width=True):
 
             response = supabase.table("usuarios") \
                 .select("*") \
                 .eq("empleado", usuario) \
-                .eq("password", contraseña) \
+                .eq("password", password) \
                 .execute()
 
             if response.data:
@@ -79,81 +88,63 @@ def login():
 
             else:
                 st.error("Usuario o contraseña incorrectos")
+
 # =========================
-#Funcion de Bienvenida
+# BIENVENIDA
 # =========================
+
 def bienvenida():
 
-    import base64
-    import time
-
-    with open("bienvenida2.png", "rb") as f:
+    with open("bienvenida2.png","rb") as f:
         img = base64.b64encode(f.read()).decode()
 
     st.markdown(f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/png;base64,{img}");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }}
+    <style>
 
-        .overlay {{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.65);
-        }}
+    .stApp {{
+        background-image:url("data:image/png;base64,{img}");
+        background-size:cover;
+        background-position:center;
+    }}
 
-        .center-box {{
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-        }}
+    .center-box {{
+        position:fixed;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        text-align:center;
+        color:white;
+    }}
 
-        .titulo {{
-            font-size: 60px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            margin-bottom: 20px;
-        }}
+    .titulo {{
+        font-size:60px;
+        font-weight:bold;
+    }}
 
-        .empleado {{
-            font-size: 28px;
-            font-weight: 400;
-            letter-spacing: 2px;
-            opacity: 0.9;
-        }}
-        </style>
+    .empleado {{
+        font-size:28px;
+    }}
 
-        <div class="overlay"></div>
+    </style>
 
-        <div class="center-box">
-            <div class="titulo">BIENVENIDO</div>
-            <div class="empleado">Empleado: {st.session_state["usuario"]}</div>
-        </div>
-    """, unsafe_allow_html=True)
+    <div class="center-box">
+        <div class="titulo">BIENVENIDO</div>
+        <div class="empleado">Empleado {st.session_state["usuario"]}</div>
+    </div>
+
+    """,unsafe_allow_html=True)
 
     progress = st.progress(0)
 
     for i in range(100):
-        time.sleep(0.03)
-        progress.progress(i + 1)
-
-    time.sleep(0.5)
+        time.sleep(0.02)
+        progress.progress(i+1)
 
     st.session_state["mostrar_bienvenida"] = False
     st.rerun()
 
 # =========================
-# FLUJO PRINCIPAL
+# FLUJO
 # =========================
 
 if not st.session_state["autenticado"]:
@@ -164,281 +155,219 @@ if st.session_state["mostrar_bienvenida"]:
     bienvenida()
     st.stop()
 
+# =========================
+# LOGOUT
+# =========================
 
-# =========================
-# BOTÓN CERRAR SESIÓN
-# =========================
 if st.button("Cerrar sesión"):
     st.session_state["autenticado"] = False
     st.rerun()
 
 # =========================
-# FONDO INDUSTRIAL OSCURO (VERSIÓN ESTABLE)
+# FONDO
 # =========================
+
 def poner_fondo():
-    with open("fondo_cnc.png", "rb") as f:
-        data = f.read()
-        encoded = base64.b64encode(data).decode()
 
-    fondo_css = """
+    with open("fondo_cnc.png","rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+
+    st.markdown(f"""
     <style>
-    .stApp {
-        background: linear-gradient(
-            rgba(0,0,0,0.55),
-            rgba(0,0,0,0.55)
-        ),
-        url("data:image/png;base64,%s");
-        background-size: cover;
-        background-attachment: fixed;
-    }
 
-    h1, h2, h3, h4, h5, h6, p, label {
-        color: white !important;
-    }
+    .stApp {{
+    background:linear-gradient(
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.55)
+    ),
+    url("data:image/png;base64,{encoded}");
+    background-size:cover;
+    }}
 
-    .stSelectbox label {
-        color: white !important;
-        font-size: 16px;
-        font-weight: bold;
-    }
+    h1,h2,h3,p,label {{
+    color:white !important;
+    }}
+
     </style>
-    """ % encoded
-
-    st.markdown(fondo_css, unsafe_allow_html=True)
+    """,unsafe_allow_html=True)
 
 poner_fondo()
 
 # =========================
-# TÍTULO
+# TITULO
 # =========================
+
 st.title("🏭 Sistema de Control de Herramientas CNC")
 
-# =========================
-# CARGAR BASE DE DATOS
-# =========================
-response = supabase.table("registros").select("*").execute()
-
-df = pd.DataFrame(response.data)
-
-if df.empty:
-    st.warning("No hay registros en la base de datos.")
-    st.stop()
+rol = st.session_state["rol"]
 
 # =========================
-# PROCESAR FECHA Y MES
+# TABS SEGUN ROL
 # =========================
-df["fecha"] = pd.to_datetime(df["fecha"])
-df["mes"] = df["fecha"].dt.strftime("%Y-%m")
 
-# =========================
-# FILTROS
-# =========================
-st.markdown("## 🔎 Filtros")
+if rol == "Operador":
 
-col1, col2, col3 = st.columns(3)
+    tab_dashboard = st.tabs(["📊 Dashboard"])[0]
 
-meses = ["Todos"] + sorted(df["mes"].unique(), reverse=True)
-maquinas = ["Todas"] + sorted(df["maquina"].unique())
-empleados = ["Todos"] + sorted(df["empleado"].unique())
+elif rol == "Toolcrib":
 
-with col1:
-    mes_seleccionado = st.selectbox("📅 Selecciona Mes", meses)
+    tab_solicitudes, tab_dashboard = st.tabs([
+        "📦 Solicitudes",
+        "📊 Dashboard"
+    ])
 
-with col2:
-    maquina_seleccionada = st.selectbox("🏭 Selecciona Máquina", maquinas)
+elif rol == "Supervisor":
 
-if st.session_state.get("rol") == "Supervisor":
-    with col3:
-        empleado_seleccionado = st.selectbox("👷 Selecciona Empleado", empleados)
-else:
-    empleado_seleccionado = st.session_state["usuario"]
-# =========================
-# FILTRAR DATOS DINÁMICO
-# =========================
-df_filtrado = df.copy()
-filtros_aplicados = False
-
-# CONTROL POR ROL
-if st.session_state.get("rol") == "Operador":
-    df_filtrado = df_filtrado[
-        df_filtrado["empleado"] == st.session_state["usuario"]
-    ]
-
-if mes_seleccionado != "Todos":
-    df_filtrado = df_filtrado[df_filtrado["mes"] == mes_seleccionado]
-    filtros_aplicados = True
-
-if maquina_seleccionada != "Todas":
-    df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina_seleccionada]
-    filtros_aplicados = True
-
-if empleado_seleccionado != "Todos":
-    df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado_seleccionado]
-    filtros_aplicados = True
-
-# 🚫 Si no hay filtros, no mostrar nada
-if not filtros_aplicados:
-    st.info("Selecciona al menos un filtro para mostrar información.")
-    st.stop()
-
-if df_filtrado.empty:
-    st.warning("No hay datos con los filtros seleccionados.")
-    st.stop()
+    tab_dashboard, tab_solicitudes, tab_empleados = st.tabs([
+        "📊 Dashboard",
+        "📦 Tool Crib",
+        "👷 Empleados"
+    ])
 
 # =========================
-# KPIs
+# DASHBOARD
 # =========================
-st.markdown("## 📌 Resumen General")
 
-col1, col2 = st.columns(2)
+with tab_dashboard:
 
-total_gastado = df_filtrado["precio"].sum()
-total_cambios = len(df_filtrado)
+    response = supabase.table("registros").select("*").execute()
+    df = pd.DataFrame(response.data)
 
-with col1:
-    st.metric("💰 Total Gastado", f"${total_gastado:,.2f}")
+    if df.empty:
+        st.warning("No hay registros")
+        st.stop()
 
-with col2:
-    st.metric("🔧 Total de Cambios", total_cambios)
+    df["fecha"] = pd.to_datetime(df["fecha"])
+    df["mes"] = df["fecha"].dt.strftime("%Y-%m")
 
-# =========================
-# HISTORIAL
-# =========================
-st.markdown("## 📋 Historial")
+    st.markdown("## 🔎 Filtros")
 
-if not df_filtrado.empty:
+    col1,col2,col3 = st.columns(3)
 
-    tabla = df_filtrado[[
-        "fecha",
-        "empleado",
-        "maquina",
-        "herramienta",
-        "tipo_cambio",
-        "motivo",
-        "precio"
-    ]].copy()
+    meses = ["Todos"] + sorted(df["mes"].unique(), reverse=True)
+    maquinas = ["Todas"] + sorted(df["maquina"].unique())
+    empleados = ["Todos"] + sorted(df["empleado"].unique())
 
-    # Calcular altura dinámica según cantidad de filas
-    filas = len(tabla)
-    alto_tabla = min(600, 60 + (filas * 35))  # 35px por fila + encabezado
+    with col1:
+        mes = st.selectbox("Mes", meses)
 
-    st.data_editor(
-        tabla,
-        hide_index=True,
-        width="stretch",
-        height=alto_tabla,
-        column_config={
-            "fecha": st.column_config.DatetimeColumn("Fecha"),
-            "empleado": st.column_config.NumberColumn("Empleado"),
-            "maquina": st.column_config.TextColumn("Máquina"),
-            "herramienta": st.column_config.TextColumn("Herramienta"),
-            "tipo_cambio": st.column_config.TextColumn("Tipo Cambio"),
-            "motivo": st.column_config.TextColumn("Motivo"),
-            "precio": st.column_config.NumberColumn(
-                "Precio ($)",
-                format="$ %.2f"
-            )
-        },
-        disabled=True
-    )
+    with col2:
+        maquina = st.selectbox("Máquina", maquinas)
 
-else:
-    st.info("No hay registros para los filtros seleccionados.")
-# =========================
-# GRÁFICA 1 - CANTIDAD CAMBIOS
-# =========================
-df_cambios = (
-    df_filtrado
-    .groupby("herramienta")
-    .size()
-    .reset_index(name="cantidad_cambios")
-    .sort_values(by="cantidad_cambios", ascending=False)
-)
+    if rol == "Supervisor":
+        with col3:
+            empleado = st.selectbox("Empleado", empleados)
+    else:
+        empleado = st.session_state["usuario"]
 
-if not df_cambios.empty:
+    df_filtrado = df.copy()
 
-    fig_cambios = px.bar(
-        df_cambios,
-        x="herramienta",
-        y="cantidad_cambios",
-        text="cantidad_cambios",
-        color="cantidad_cambios",
-        color_continuous_scale="Blues",
-        title="🔧 Cantidad de Cambios por Herramienta"
-    )
+    if rol == "Operador":
+        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
 
-    fig_cambios.update_traces(
-        textposition="outside",
-        cliponaxis=False
-    )
+    if mes != "Todos":
+        df_filtrado = df_filtrado[df_filtrado["mes"] == mes]
 
-    fig_cambios.update_layout(
-        template="plotly_dark",
-        title_x=0.5,
-        xaxis_title="Herramienta",
-        yaxis_title="Cantidad de Cambios",
-        margin=dict(t=120)  # 👈 espacio extra arriba
-    )
+    if maquina != "Todas":
+        df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina]
 
-    fig_cambios.update_layout(
-        template="plotly_dark",
-        title_x=0.5,
-        xaxis_title="Herramienta",
-        yaxis_title="Cantidad de Cambios"
-    )
+    if empleado != "Todos":
+        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
 
-    st.plotly_chart(fig_cambios, use_container_width=True)
+    st.markdown("## 📌 Resumen")
 
-else:
-    st.info("No hay datos para mostrar.")
+    col1,col2 = st.columns(2)
+
+    with col1:
+        st.metric("💰 Total Gastado", f"${df_filtrado['precio'].sum():,.2f}")
+
+    with col2:
+        st.metric("🔧 Cambios", len(df_filtrado))
+
+    st.markdown("## 📋 Historial")
+
+    st.dataframe(df_filtrado)
 
 # =========================
-# GRÁFICA 2 - GASTO POR HERRAMIENTA
+# TOOLCRIB
 # =========================
-df_gasto = (
-    df_filtrado
-    .groupby("herramienta")["precio"]
-    .sum()
-    .reset_index()
-    .sort_values(by="precio", ascending=False)
-)
-if not df_gasto.empty:
 
-    fig_gasto = px.bar(
-        df_gasto,
-        x="herramienta",
-        y="precio",
-        text="precio",
-        color="precio",
-        color_continuous_scale="Greens",
-        title="💰 Gasto Total por Herramienta"
-    )
+if rol in ["Toolcrib","Supervisor"]:
 
-    fig_gasto.update_traces(
-        texttemplate='$%{text:,.2f}',
-        textposition="outside",
-        cliponaxis=False
-    )
+    with tab_solicitudes:
 
-    fig_gasto.update_layout(
-        template="plotly_dark",
-        title_x=0.5,
-        xaxis_title="Herramienta",
-        yaxis_title="Total Gastado ($)",
-        margin=dict(t=120)  # 👈 espacio arriba
-    )
+        st.subheader("📦 Solicitudes")
 
-    fig_gasto.update_layout(
-        template="plotly_dark",
-        title_x=0.5,
-        xaxis_title="Herramienta",
-        yaxis_title="Total Gastado ($)"
-    )
+        response = supabase.table("solicitudes_herramienta") \
+        .select("*") \
+        .eq("estado","pendiente") \
+        .execute()
 
-    st.plotly_chart(fig_gasto, use_container_width=True)
+        df_sol = pd.DataFrame(response.data)
 
-else:
-    st.info("No hay datos para mostrar.")
+        if df_sol.empty:
+            st.info("No hay solicitudes")
+
+        else:
+
+            for i,row in df_sol.iterrows():
+
+                col1,col2,col3 = st.columns([2,2,1])
+
+                with col1:
+                    st.write("Empleado:",row["empleado"])
+                    st.write("Máquina:",row["maquina"])
+
+                with col2:
+                    st.write("Herramienta:",row["herramienta"])
+                    st.write("Motivo:",row["motivo"])
+
+                with col3:
+
+                    if st.button("Entregar",key=i):
+
+                        data = {
+                        "fecha":row["fecha"],
+                        "empleado":row["empleado"],
+                        "maquina":row["maquina"],
+                        "herramienta":row["herramienta"],
+                        "descripcion":row["descripcion"],
+                        "tipo_cambio":row["tipo_cambio"],
+                        "motivo":row["motivo"],
+                        "precio":row["precio"],
+                        "entregado_por":st.session_state["usuario"]
+                        }
+
+                        supabase.table("registros").insert(data).execute()
+
+                        supabase.table("solicitudes_herramienta") \
+                        .update({"estado":"entregado"}) \
+                        .eq("id",row["id"]) \
+                        .execute()
+
+                        st.rerun()
+
+# =========================
+# SUPERVISOR EMPLEADOS
+# =========================
+
+if rol == "Supervisor":
+
+    with tab_empleados:
+
+        st.subheader("👷 Historial empleados")
+
+        empleados_lista = sorted(df["empleado"].unique())
+
+        tabs_emp = st.tabs([f"Empleado {e}" for e in empleados_lista])
+
+        for i,emp in enumerate(empleados_lista):
+
+            with tabs_emp[i]:
+
+                df_emp = df[df["empleado"] == emp]
+
+                st.dataframe(df_emp)
 
 
 
@@ -446,6 +375,7 @@ else:
  
 
    
+
 
 
 
