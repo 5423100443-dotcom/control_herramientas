@@ -507,11 +507,11 @@ if rol in ["toolcrib","supervisor"]:
                 *Cantidad:* {row["cantidad_insertos"]}
                 """)
 
-    else:
-
-        st.success("🛠 *Herramienta completa*")
-
-    st.write("Motivo:",row["motivo"])
+                    else:
+                
+                        st.success("🛠 *Herramienta completa*")
+                
+                    st.write("Motivo:",row["motivo"])
 
                 with col3:
 
@@ -545,6 +545,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
