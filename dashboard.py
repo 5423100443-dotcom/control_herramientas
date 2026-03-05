@@ -267,7 +267,14 @@ with tab_dashboard:
     else:
         empleado = st.session_state["usuario"]
 
-    df_filtrado = df.copy()
+    df_filtrado = df.copy
+
+    
+    if mes == "Todos" and maquina == "Todas" and empleado == "Todos":
+    st.info("🔎 Selecciona al menos un filtro para mostrar información.")
+    st.stop()
+
+    
 
     if rol == "operador":
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
@@ -386,6 +393,7 @@ if rol == "supervisor":
  
 
    
+
 
 
 
