@@ -205,7 +205,6 @@ poner_fondo()
 # =========================
 
 st.title("🏭 Sistema de Control de Herramientas CNC")
-st_autorefresh(interval=5000, key="refresh")
 rol = st.session_state["rol"]
 
 # =========================
@@ -523,6 +522,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
