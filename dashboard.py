@@ -269,15 +269,15 @@ with tab_dashboard:
 
     df_filtrado = df.copy()
     if mes != "Seleccionar":
-        df_filtrado = df_filtrado[df_filtrado["mes"] == mes_seleccionado]
+        df_filtrado = df_filtrado[df_filtrado["mes"] == mes]
         filtros_aplicados = True
     
     if maquina != "Seleccionar":
-        df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina_seleccionada]
+        df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina]
         filtros_aplicados = True
     
     if empleado != "Seleccionar":
-        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado_seleccionado]
+        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
         filtros_aplicados = True
     
     # 🚫 Si no hay filtros, no mostrar nada
@@ -407,6 +407,7 @@ if rol == "supervisor":
  
 
    
+
 
 
 
