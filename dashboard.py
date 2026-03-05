@@ -287,7 +287,22 @@ with tab_dashboard:
     if df_filtrado.empty:
         st.warning("No hay datos con los filtros seleccionados.")
         st.stop()
-
+    
+    df_filtrado = df_filtrado.sort_values("fecha", ascending=False)
+    
+    st.markdown("## 📌 Resumen")
+    
+    col1,col2 = st.columns(2)
+    
+    with col1:
+        st.metric("💰 Total Gastado", f"${df_filtrado['precio'].sum():,.2f}")
+    
+    with col2:
+        st.metric("🔧 Cambios", len(df_filtrado))
+    
+    st.markdown("## 📋 Historial")
+    
+    st.dataframe(df_filtrado)
 # =========================
 # TOOLCRIB
 # =========================
@@ -377,6 +392,7 @@ if rol == "supervisor":
  
 
    
+
 
 
 
