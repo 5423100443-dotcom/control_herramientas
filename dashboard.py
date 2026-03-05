@@ -267,17 +267,16 @@ with tab_dashboard:
     else:
         empleado = st.session_state["usuario"]
 
-   df_filtrado = df.copy()
-
-    if mes_seleccionado != "Seleccionar":
+    df_filtrado = df.copy()
+    if mes_seleccionado != "Todos":
         df_filtrado = df_filtrado[df_filtrado["mes"] == mes_seleccionado]
         filtros_aplicados = True
     
-    if maquina_seleccionada != "Seleccionar":
+    if maquina_seleccionada != "Todas":
         df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina_seleccionada]
         filtros_aplicados = True
     
-    if empleado_seleccionado != "Seleccionar":
+    if empleado_seleccionado != "Todos":
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado_seleccionado]
         filtros_aplicados = True
     
@@ -289,8 +288,8 @@ with tab_dashboard:
     if df_filtrado.empty:
         st.warning("No hay datos con los filtros seleccionados.")
         st.stop()
-   
 
+        
     if rol == "operador":
         df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
 
@@ -408,6 +407,7 @@ if rol == "supervisor":
  
 
    
+
 
 
 
