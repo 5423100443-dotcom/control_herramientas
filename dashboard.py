@@ -379,13 +379,14 @@ if rol == "supervisor":
 
                 df_emp = df[df["empleado"] == emp]
 
-                st.dataframe(df_emp
+                st.dataframe(df_emp)
 
 
 
  
 
    
+
 
 
 
