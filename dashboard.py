@@ -243,7 +243,7 @@ if rol == "operador":
 
 elif rol == "toolcrib":
 
-    tab_dashboard, tab_solicitudes = st.tabs([
+    tab_solocitudes, tab_dashboard = st.tabs([
         "📦 Tool Crib",
         "📊 Dashboard"
     ])
@@ -263,6 +263,15 @@ with tab_dashboard:
 
     response = supabase.table("registros").select("*").execute()
     df = pd.DataFrame(response.data)
+
+    if rol == "operador":
+        df = df[df["empleado"] == st.session_state["usuario"]]
+
+    elif rol == "toolcrib":
+        df = df[df["entregado por"] == st.session_state["usuario"]]
+
+    elif rol == "supervisor":
+        df = df
 
     if df.empty:
         st.warning("No hay registros")
@@ -574,6 +583,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
