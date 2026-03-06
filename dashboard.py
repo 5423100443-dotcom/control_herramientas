@@ -268,7 +268,6 @@ with tab_dashboard:
 
     if df.empty:
         st.warning("No hay registros")
-        st.stop()
 
     df["fecha"] = pd.to_datetime(df["fecha"])
     df["mes"] = df["fecha"].dt.strftime("%Y-%m")
@@ -576,6 +575,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
