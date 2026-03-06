@@ -220,6 +220,18 @@ poner_fondo()
 
 st.title("🏭 Sistema de Control de Herramientas CNC")
 rol = st.session_state["rol"]
+col1, col2 = st.columns([8,2])
+
+with col2:
+    st.markdown(
+        f"""
+        <div style="text-align:right; font-size:16px;">
+        👤 <b>{st.session_state['usuario']}</b><br>
+        🔐 {st.session_state['rol'].capitalize()}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # =========================
 # TABS SEGUN ROL
@@ -562,6 +574,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
