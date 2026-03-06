@@ -295,7 +295,7 @@ with tab_dashboard:
     # verificar si hay filtros
     if mes == "Seleccionar" and maquina == "Seleccionar" and empleado == "Seleccionar":
         st.info("Selecciona al menos un filtro para mostrar información.")
-        st.stop()
+        
 
      # aplicar filtros
     if mes != "Seleccionar":
@@ -313,7 +313,7 @@ with tab_dashboard:
     # verificar si quedó vacío
     if df_filtrado.empty:
         st.warning("No hay datos con los filtros seleccionados.")
-        st.stop()
+        
 
     # =========================
     # KPIs
@@ -574,6 +574,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
