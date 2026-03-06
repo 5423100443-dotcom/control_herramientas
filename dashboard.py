@@ -295,6 +295,7 @@ with tab_dashboard:
     # verificar si hay filtros
     if mes == "Seleccionar" and maquina == "Seleccionar" and empleado == "Seleccionar":
         st.warning("Selecciona al menos un filtro para mostrar información.")
+        mostrar_dashboard = False
 
     else:
         
@@ -576,6 +577,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
