@@ -508,7 +508,7 @@ if rol in ["toolcrib","supervisor"]:
                 """)
 
                     else:
-                
+                        st.write("Descripcion:", row ["descripcion"])
                         st.success("🛠 *Herramienta completa*")
                 
                     st.write("Motivo:",row["motivo"])
@@ -545,6 +545,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
