@@ -306,7 +306,7 @@ with tab_dashboard:
         if maquina != "Seleccionar":
             df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina]
                 
-        if empleado != "Seleccionar":
+        if rol == "supervisor" and empleado != "Seleccionar":
             df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
             
     
@@ -576,6 +576,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
