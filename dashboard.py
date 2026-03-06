@@ -498,7 +498,7 @@ with tab_dashboard:
 # TOOLCRIB
 # =========================
 
-if rol in ["toolcrib","supervisor"]:
+if rol in ["Toolcrib","supervisor"]:
 
     with tab_solicitudes:
 
@@ -583,6 +583,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
