@@ -261,7 +261,7 @@ with tab_dashboard:
         df = df[df["empleado"] == st.session_state["usuario"]]
 
     elif rol == "toolcrib":
-        df = df
+        df = df[df["entregado_por"] == st.session_state["usuario"]]
 
     elif rol == "supervisor":
         df = df
@@ -576,6 +576,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
