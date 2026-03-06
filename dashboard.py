@@ -308,7 +308,7 @@ with tab_dashboard:
         else:
             mostrar_dashboard = True
 
-    else:
+    if mostrar dashboard:
         
 
          # aplicar filtros
@@ -588,6 +588,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
