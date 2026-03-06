@@ -53,8 +53,8 @@ params = st.query_params
 if "usuario" in params and "rol" in params:
 
     st.session_state["autenticado"] = True
-    st.session_state["usuario"] = params["usuario"][0]
-    st.session_state["rol"] = params["rol"][0]
+    st.session_state["usuario"] = params["usuario"]
+    st.session_state["rol"] = params["rol"]
 
 # =========================
 # LOGIN
@@ -237,14 +237,16 @@ with col2:
 # TABS
 # =========================
 
-tabs = ["📊 Dashboard"]
+if rol == "operador":
 
-if rol in ["toolcrib", "supervisor"]:
-    tabs.append("📦 Tool Crib")
+    tab_dashboard = st.tabs(["📊 Dashboard"])[0]
 
-tab_objects = st.tabs(tabs)
+else:
 
-tab_dashboard = tab_objects[0]
+    tab_dashboard, tab_solicitudes = st.tabs([
+        "📊 Dashboard",
+        "📦 Tool Crib"
+    ])
 
 if rol in ["toolcrib", "supervisor"]:
     tab_solicitudes = tab_objects[1]
@@ -575,6 +577,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
