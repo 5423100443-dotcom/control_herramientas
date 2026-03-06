@@ -285,7 +285,7 @@ with tab_dashboard:
     with col2:
         maquina = st.selectbox("Máquina", maquinas)
 
-    if rol == "supervisor":
+    if rol == "supervisor, toolcrib":
         with col3:
             empleado = st.selectbox("Empleado", empleados)
     else:
@@ -574,6 +574,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
