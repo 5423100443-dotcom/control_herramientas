@@ -501,6 +501,7 @@ if rol in ["toolcrib","supervisor"]:
         .select("*") \
         .eq("estado","pendiente") \
         .execute()
+        st.write(df_sol)
 
         df_sol = pd.DataFrame(response.data)
         pendientes = len(df_sol)
@@ -576,6 +577,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
