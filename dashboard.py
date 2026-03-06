@@ -53,8 +53,8 @@ params = st.query_params
 if "usuario" in params and "rol" in params:
 
     st.session_state["autenticado"] = True
-    st.session_state["usuario"] = params["usuario"]
-    st.session_state["rol"] = params["rol"]
+    st.session_state["usuario"] = params["usuario"][0]
+    st.session_state["rol"] = params["rol"][0]
 
 # =========================
 # LOGIN
@@ -575,6 +575,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
