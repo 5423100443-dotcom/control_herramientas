@@ -4,7 +4,6 @@ plotly
 supabase
 openpyxl
 streamlit-autorefresh
-streamlit_cookies_manager
 
 
 
