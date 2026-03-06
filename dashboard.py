@@ -292,7 +292,7 @@ with tab_dashboard:
         empleado = st.session_state["usuario"]
     df_filtrado = df.copy()
 
-   if rol == "supervisor":
+    if rol == "supervisor":
 
         if mes == "Seleccionar" and maquina == "Seleccionar" and empleado == "Seleccionar":
             st.warning("Selecciona al menos un filtro para mostrar información.")
@@ -300,7 +300,7 @@ with tab_dashboard:
         else:
             mostrar_dashboard = True
 
-   else:
+    else:
 
         if mes == "Seleccionar" and maquina == "Seleccionar":
             st.warning("Selecciona Mes o Máquina para ver información.")
@@ -588,6 +588,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
