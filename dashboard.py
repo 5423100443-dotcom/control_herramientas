@@ -234,27 +234,20 @@ with col2:
     )
 
 # =========================
-# TABS SEGUN ROL
+# TABS
 # =========================
 
-if rol == "operador":
+tabs = ["📊 Dashboard"]
 
-    tab_dashboard = st.tabs(["📊 Dashboard"])[0]
+if rol in ["toolcrib", "supervisor"]:
+    tabs.append("📦 Tool Crib")
 
-elif rol == "toolcrib":
+tab_objects = st.tabs(tabs)
 
-    tab_dashboard, tab_solicitudes = st.tabs([
-        "📊 Dashboard",
-        "📦 Tool Crib"
-    ])
+tab_dashboard = tab_objects[0]
 
-elif rol == "supervisor":
-
-    tab_dashboard, tab_solicitudes = st.tabs([
-        "📊 Dashboard",
-        "📦 Tool Crib"
-    ])
-
+if rol in ["toolcrib", "supervisor"]:
+    tab_solicitudes = tab_objects[1]
 # =========================
 # DASHBOARD
 # =========================
@@ -583,6 +576,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
