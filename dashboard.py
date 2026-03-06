@@ -5,6 +5,7 @@ import base64
 from streamlit_autorefresh import st_autorefresh
 from supabase import create_client
 import time
+from streamlit_cookies_manager import EncryptedCookiesManager
 
 # =========================
 # SUPABASE (SECRETS)
@@ -25,6 +26,9 @@ st.set_page_config(
     layout="centered"
 )
 
+cookies = EncryptedCookiesManager( prefix="toolcrib", password="tolcrib_cnc_20261n#0&$")
+if not cookies.ready():
+    st.stop()
 # =========================
 # CONTROL DE SESIÓN
 # =========================
@@ -43,7 +47,12 @@ if "rol" not in st.session_state:
 
 # refresh automático
 if st.session_state["autenticado"] and not st.session_state["mostrar_bienvenida"]:
-    st_autorefresh(interval=10000, key="refresh")
+    st_autorefresh(interval=5000, key="refresh")
+
+if cookies.get("usuario"):
+    st.session_state["autenticado"] = True
+    st.session_state["usuario"] = cookies.get("usuario")
+    st.session_state["rol"] = cookies.get("rol")
 
 # =========================
 # LOGIN
@@ -85,6 +94,9 @@ def login():
                     st.session_state["mostrar_bienvenida"] = True
                     st.session_state["usuario"] = usuario
                     st.session_state["rol"] = usuario_data["rol"].lower()
+                    cookies["usuario"] = usuario
+                    cookies["rol"] = usuario_data["rol"].lower()
+                    cookies.save()
 
                     st.rerun()
 
@@ -167,7 +179,10 @@ if st.session_state["mostrar_bienvenida"]:
 # =========================
 
 if st.button("Cerrar sesión"):
-    st.session_state["autenticado"] = False
+    cookies["usuario"] = ""
+    cookies["rol"] = ""
+    cookies.save()
+    st.session_state.clear()
     st.rerun()
 
 # =========================
@@ -545,6 +560,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
