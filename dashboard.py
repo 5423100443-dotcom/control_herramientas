@@ -247,9 +247,6 @@ else:
         "📊 Dashboard",
         "📦 Tool Crib"
     ])
-
-if rol in ["toolcrib", "supervisor"]:
-    tab_solicitudes = tab_objects[1]
 # =========================
 # DASHBOARD
 # =========================
@@ -577,6 +574,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
