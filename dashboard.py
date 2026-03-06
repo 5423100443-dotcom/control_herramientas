@@ -261,7 +261,7 @@ with tab_dashboard:
         df = df[df["empleado"] == st.session_state["usuario"]]
 
     elif rol == "toolcrib":
-        df = df[df["entregado_por"] == st.session_state["usuario"]]
+        df = df
 
     elif rol == "supervisor":
         df = df
@@ -501,7 +501,6 @@ if rol in ["toolcrib","supervisor"]:
         .select("*") \
         .eq("estado","pendiente") \
         .execute()
-        st.write(df_sol)
 
         df_sol = pd.DataFrame(response.data)
         pendientes = len(df_sol)
@@ -577,6 +576,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
