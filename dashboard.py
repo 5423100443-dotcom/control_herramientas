@@ -253,6 +253,39 @@ with col2:
         """,
         unsafe_allow_html=True
     )
+st.markdown("""
+<style>
+
+/* Selectbox contenedor */
+div[data-baseweb="select"] {
+    background-color: transparent !important;
+}
+
+/* Caja visible del select */
+div[data-baseweb="select"] > div {
+    background-color: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
+    border-radius: 10px !important;
+}
+
+/* Texto del select */
+div[data-baseweb="select"] span {
+    color: white !important;
+}
+
+/* Flecha del select */
+div[data-baseweb="select"] svg {
+    fill: white !important;
+}
+
+/* Hover */
+div[data-baseweb="select"] > div:hover {
+    background-color: rgba(255,255,255,0.25) !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 
 st.markdown("""
 <style>
@@ -658,6 +691,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
