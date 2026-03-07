@@ -222,6 +222,18 @@ st.title("🏭 Sistema de Control de Herramientas CNC")
 rol = st.session_state["rol"]
 col1, col2 = st.columns([8,2])
 
+st.markdown("""
+<style>
+
+.user-info {
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 
 with col2:
     st.markdown(
@@ -591,6 +603,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
