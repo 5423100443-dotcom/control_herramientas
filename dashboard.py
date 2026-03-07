@@ -594,7 +594,7 @@ if rol in ["toolcrib","supervisor"]:
                 with col1:
 
                     st.markdown(f"""
-                    👷 *Empleado:* {row.get["nombre"]}({row["empleado"]})
+                    👷 *Empleado:* ({row["empleado"]})
                     🏭 *Máquina:* {row["maquina"]}  
                     🔧 *Herramienta:* {row["herramienta"]}
                     """)
@@ -650,6 +650,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
