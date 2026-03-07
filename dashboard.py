@@ -254,6 +254,29 @@ with col2:
         unsafe_allow_html=True
     )
 
+st.markdown("""
+<style>
+
+/* Selectbox transparente */
+.stSelectbox div[data-baseweb="select"] {
+    background-color: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
+    border-radius: 8px;
+}
+
+/* Texto dentro del selectbox */
+.stSelectbox div[data-baseweb="select"] * {
+    color: white !important;
+}
+
+/* Hover */
+.stSelectbox div[data-baseweb="select"]:hover {
+    background-color: rgba(255,255,255,0.25) !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 
 st.markdown("""
 <style>
@@ -635,6 +658,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
