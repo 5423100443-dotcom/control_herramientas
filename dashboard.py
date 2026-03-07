@@ -283,7 +283,7 @@ with col2:
     st.markdown(
         f"""
         <div style="text-align:right; font-size:16px; color:white; front-wheirht:600">
-        👤 <b>{st.session_state.get['nombre','']}({st.session_state['usuario']})</b><br>
+        👤 <b>{st.session_state.get('nombre','')}({st.session_state['usuario']})</b><br>
         🔐 {st.session_state['rol'].capitalize()}
         </div>
         """,
@@ -650,6 +650,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
