@@ -98,6 +98,7 @@ def login():
                     st.session_state["rol"] = usuario_data["rol"].lower()
                     st.query_params["usuario"] = usuario
                     st.query_params["rol"] = usuario_data["rol"].lower()
+                    st.session_state["nombre"] = usuario_data["nombre"]
 
                     st.rerun()
 
@@ -271,6 +272,7 @@ with col2:
         f"""
         <div style="text-align:right; font-size:16px; color:white; front-wheirht:600">
         👤 <b>{st.session_state['usuario']}</b><br>
+        👤{st.session_state['nombre']}
         🔐 {st.session_state['rol'].capitalize()}
         </div>
         """,
@@ -581,7 +583,8 @@ if rol in ["toolcrib","supervisor"]:
                 with col1:
 
                     st.markdown(f"""
-                    👷 *Empleado:* {row["empleado"]}  
+                    👷 *Empleado:* {row["empleado"]}
+                    👷 *Empleado:* {row["nombre"]}
                     🏭 *Máquina:* {row["maquina"]}  
                     🔧 *Herramienta:* {row["herramienta"]}
                     """)
@@ -637,6 +640,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
