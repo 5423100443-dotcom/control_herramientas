@@ -256,15 +256,10 @@ with col2:
 st.markdown("""
 <style>
 
-/* Selectbox contenedor */
-div[data-baseweb="select"] {
-    background-color: transparent !important;
-}
-
-/* Caja visible del select */
+/* Caja del select */
 div[data-baseweb="select"] > div {
-    background-color: rgba(255,255,255,0.15) !important;
-    border: 1px solid rgba(255,255,255,0.4) !important;
+    background: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.5) !important;
     border-radius: 10px !important;
 }
 
@@ -273,14 +268,24 @@ div[data-baseweb="select"] span {
     color: white !important;
 }
 
-/* Flecha del select */
+/* Flecha */
 div[data-baseweb="select"] svg {
     fill: white !important;
 }
 
-/* Hover */
-div[data-baseweb="select"] > div:hover {
-    background-color: rgba(255,255,255,0.25) !important;
+/* MENU DESPLEGABLE */
+ul[role="listbox"] {
+    background-color: white !important;
+}
+
+/* TEXTO DEL MENU */
+ul[role="listbox"] li {
+    color: black !important;
+}
+
+/* HOVER OPCIONES */
+ul[role="listbox"] li:hover {
+    background-color: #f0f0f0 !important;
 }
 
 </style>
@@ -691,6 +696,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
