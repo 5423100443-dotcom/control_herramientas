@@ -214,6 +214,33 @@ def poner_fondo():
 
 poner_fondo()
 
+st.markdown("""
+<style>
+
+/* BOTON CERRAR SESION */
+button[data-testid="baseButton-secondary"] {
+    background-color: transparent !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
+}
+
+/* BOTON ENTREGAR */
+button[kind="secondary"] {
+    background-color: transparent !important;
+    color: white !important;
+}
+
+/* HOVER */
+button[data-testid="baseButton-secondary"]:hover,
+button[kind="secondary"]:hover {
+    background-color: rgba(255,255,255,0.15) !important;
+    color: white !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
 # =========================
 # TITULO
 # =========================
@@ -238,7 +265,7 @@ st.markdown("""
 with col2:
     st.markdown(
         f"""
-        <div style="text-align:right; font-size:16px;">
+        <div style="text-align:right; font-size:16px; color:white; front-wheirht:600">
         👤 <b>{st.session_state['usuario']}</b><br>
         🔐 {st.session_state['rol'].capitalize()}
         </div>
@@ -603,6 +630,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
