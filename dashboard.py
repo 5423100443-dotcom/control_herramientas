@@ -233,6 +233,36 @@ with col2:
         unsafe_allow_html=True
     )
 
+
+st.markdown("""
+<style>
+
+/* BOTONES PRINCIPALES */
+.stButton>button {
+    background-color: #ff4b4b;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    padding: 8px 18px;
+    font-weight: bold;
+}
+
+/* EFECTO HOVER */
+.stButton>button:hover {
+    background-color: #ff2b2b;
+    color: white;
+}
+
+/* BOTON ACTIVO */
+.stButton>button:active {
+    background-color: #e60023;
+    color: white;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
 # =========================
 # TABS
 # =========================
@@ -588,6 +618,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
