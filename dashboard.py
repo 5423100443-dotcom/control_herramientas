@@ -237,19 +237,19 @@ with col2:
 st.markdown("""
 <style>
 
-/* Texto blanco en botones */
+/* Texto negro en botones */
 .stButton > button {
-    color: white !important;
+    color: black !important;
 }
 
-/* Mantener texto blanco cuando pasas el mouse */
+/* Mantener texto negro cuando pasas el mouse */
 .stButton > button:hover {
-    color: white !important;
+    color: black !important;
 }
 
-/* Mantener texto blanco cuando se presiona */
+/* Mantener texto negro cuando se presiona */
 .stButton > button:active {
-    color: white !important;
+    color: black !important;
 }
 
 </style>
@@ -611,6 +611,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
