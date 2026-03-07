@@ -574,7 +574,7 @@ if rol in ["toolcrib","supervisor"]:
             for i,row in df_sol.iterrows():
 
                 if i > 0:
-                    st.divider()
+                    st.markdown("<hr style='border:1px solid white; opacity:0.4;'>",unsafe_allow_html=True)
 
                 col1,col2,col3 = st.columns([2,2,1])
 
@@ -637,6 +637,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
