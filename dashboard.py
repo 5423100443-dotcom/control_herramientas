@@ -573,6 +573,9 @@ if rol in ["toolcrib","supervisor"]:
 
             for i,row in df_sol.iterrows():
 
+                if i > 0:
+                    st.divider()
+
                 col1,col2,col3 = st.columns([2,2,1])
 
                 with col1:
@@ -634,6 +637,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
