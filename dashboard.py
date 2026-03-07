@@ -214,6 +214,10 @@ def poner_fondo():
 
 poner_fondo()
 
+#=====================================================
+#Configuracion color botones entregar y cerrar secion
+#=====================================================
+
 st.markdown("""
 <style>
 
@@ -279,7 +283,7 @@ with col2:
 # TABS
 # =========================
 
-if rol == "operador":
+if rol == "tecnico":
 
     tab_dashboard = st.tabs(["📊 Dashboard"])[0]
 
@@ -298,7 +302,7 @@ with tab_dashboard:
     response = supabase.table("registros").select("*").execute()
     df = pd.DataFrame(response.data)
 
-    if rol == "operador":
+    if rol == "tecnico":
         df = df[df["empleado"] == st.session_state["usuario"]]
 
     elif rol == "toolcrib":
@@ -630,6 +634,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
