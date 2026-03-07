@@ -562,9 +562,9 @@ if rol in ["toolcrib","supervisor"]:
 
         df_sol = pd.DataFrame(response.data)
         pendientes = len(df_sol)
-        st.subheader(f"solicitudes({pendientes})")
+        st.subheader(f"Solicitudes:({pendientes})")
         if pendientes > 0:
-            st.warning(f"Hay {pendientes} solicitudes pendientes")
+            st.warning(f"Hay {pendientes} solicitudes pendientes:")
 
         if df_sol.empty:
             st.info("No hay solicitudes")
@@ -634,6 +634,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
