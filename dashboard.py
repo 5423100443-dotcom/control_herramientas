@@ -237,26 +237,19 @@ with col2:
 st.markdown("""
 <style>
 
-/* BOTONES PRINCIPALES */
-.stButton>button {
-    background-color: #ff4b4b;
-    color: white;
-    border-radius: 8px;
-    border: none;
-    padding: 8px 18px;
-    font-weight: bold;
+/* Texto blanco en botones */
+.stButton > button {
+    color: white !important;
 }
 
-/* EFECTO HOVER */
-.stButton>button:hover {
-    background-color: #ff2b2b;
-    color: white;
+/* Mantener texto blanco cuando pasas el mouse */
+.stButton > button:hover {
+    color: white !important;
 }
 
-/* BOTON ACTIVO */
-.stButton>button:active {
-    background-color: #e60023;
-    color: white;
+/* Mantener texto blanco cuando se presiona */
+.stButton > button:active {
+    color: white !important;
 }
 
 </style>
@@ -618,6 +611,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
