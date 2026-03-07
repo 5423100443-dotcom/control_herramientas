@@ -237,24 +237,27 @@ with col2:
 st.markdown("""
 <style>
 
-/* Texto negro en botones */
+/* BOTONES STREAMLIT */
 .stButton > button {
-    color: black !important;
+    background-color: transparent !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
 }
 
-/* Mantener texto negro cuando pasas el mouse */
+/* HOVER */
 .stButton > button:hover {
-    color: black !important;
+    background-color: rgba(255,255,255,0.15) !important;
+    color: white !important;
 }
 
-/* Mantener texto negro cuando se presiona */
+/* CLICK */
 .stButton > button:active {
-    color: black !important;
+    background-color: rgba(255,255,255,0.25) !important;
+    color: white !important;
 }
 
 </style>
 """, unsafe_allow_html=True)
-
 
 # =========================
 # TABS
@@ -611,6 +614,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
