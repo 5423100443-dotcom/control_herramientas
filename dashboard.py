@@ -38,6 +38,9 @@ if "mostrar_bienvenida" not in st.session_state:
 if "usuario" not in st.session_state:
     st.session_state["usuario"] = None
 
+if "nombre" not in st.session_state:
+    st.session_state["nombre"] = None
+
 if "rol" not in st.session_state:
     st.session_state["rol"] = None
 
@@ -55,6 +58,14 @@ if "usuario" in params and "rol" in params:
     st.session_state["autenticado"] = True
     st.session_state["usuario"] = params["usuario"]
     st.session_state["rol"] = params["rol"]
+
+    response = supabase.table("usuarios") \
+        .select("nombre") \
+        .eq("empleado", params["usuario"]) \
+        .execute()
+
+    if response.data:
+        st.session_state["nombre"] = response.data[0]["nombre"]
 
 # =========================
 # LOGIN
@@ -272,7 +283,7 @@ with col2:
     st.markdown(
         f"""
         <div style="text-align:right; font-size:16px; color:white; front-wheirht:600">
-        👤 <b>{st.session_state['nombre']}({st.session_state['usuario']})</b><br>
+        👤 <b>{st.session_state.get['nombre','']}({st.session_state['usuario']})</b><br>
         🔐 {st.session_state['rol'].capitalize()}
         </div>
         """,
@@ -639,6 +650,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
