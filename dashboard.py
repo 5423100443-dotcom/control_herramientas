@@ -222,26 +222,6 @@ st.title("🏭 Sistema de Control de Herramientas CNC")
 rol = st.session_state["rol"]
 col1, col2 = st.columns([8,2])
 
-st.markdown("""
-<style>
-
-/* Texto general en blanco */
-html, body, [class*="css"]  {
-    color: white !important;
-}
-
-/* Texto de labels */
-label {
-    color: white !important;
-}
-
-/* Texto dentro de markdown */
-p, span, div {
-    color: white !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
 
 with col2:
     st.markdown(
@@ -253,93 +233,8 @@ with col2:
         """,
         unsafe_allow_html=True
     )
-st.markdown("""
-<style>
-
-/* Caja del select */
-div[data-baseweb="select"] > div {
-    background: rgba(255,255,255,0.15) !important;
-    border: 1px solid rgba(255,255,255,0.5) !important;
-    border-radius: 10px !important;
-}
-
-/* Texto del select */
-div[data-baseweb="select"] span {
-    color: white !important;
-}
-
-/* Flecha */
-div[data-baseweb="select"] svg {
-    fill: white !important;
-}
-
-/* MENU DESPLEGABLE */
-ul[role="listbox"] {
-    background-color: white !important;
-}
-
-/* TEXTO DEL MENU */
-ul[role="listbox"] li {
-    color: black !important;
-}
-
-/* HOVER OPCIONES */
-ul[role="listbox"] li:hover {
-    background-color: #f0f0f0 !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
 
 
-st.markdown("""
-<style>
-
-/* Selectbox transparente */
-.stSelectbox div[data-baseweb="select"] {
-    background-color: rgba(255,255,255,0.15) !important;
-    border: 1px solid rgba(255,255,255,0.4) !important;
-    border-radius: 8px;
-}
-
-/* Texto dentro del selectbox */
-.stSelectbox div[data-baseweb="select"] * {
-    color: white !important;
-}
-
-/* Hover */
-.stSelectbox div[data-baseweb="select"]:hover {
-    background-color: rgba(255,255,255,0.25) !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-
-st.markdown("""
-<style>
-
-/* BOTONES STREAMLIT */
-.stButton > button {
-    background-color: transparent !important;
-    color: white !important;
-    border: 1px solid rgba(255,255,255,0.4) !important;
-}
-
-/* HOVER */
-.stButton > button:hover {
-    background-color: rgba(255,255,255,0.15) !important;
-    color: white !important;
-}
-
-/* CLICK */
-.stButton > button:active {
-    background-color: rgba(255,255,255,0.25) !important;
-    color: white !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
 
 # =========================
 # TABS
@@ -696,6 +591,7 @@ if rol in ["toolcrib","supervisor"]:
  
 
    
+
 
 
 
