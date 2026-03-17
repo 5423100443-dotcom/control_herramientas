@@ -317,7 +317,7 @@ with tab_dashboard:
     if "nombre" not in df.columns: 
         df["nombre"] = ""
 
-    if "entregdo_nombre" not in df.columns:
+    if "entregado_nombre" not in df.columns:
         df["entregado_nombre"] = ""
 
     if rol == "tecnico":
@@ -421,7 +421,7 @@ with tab_dashboard:
                 "nombre",
                 "empleado",
                 "entregado_nombre",
-                "entregado_por"
+                "entregado_por",
                 "maquina",
                 "herramienta",
                 "tipo_cambio",
