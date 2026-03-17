@@ -413,7 +413,10 @@ with tab_dashboard:
         
             tabla = df_filtrado[[
                 "fecha",
+                "nombre",
                 "empleado",
+                "entregado_nombre",
+                "entregado_por"
                 "maquina",
                 "herramienta",
                 "tipo_cambio",
@@ -432,7 +435,10 @@ with tab_dashboard:
                 height=alto_tabla,
                 column_config={
                     "fecha": st.column_config.DatetimeColumn("Fecha"),
-                    "empleado": st.column_config.NumberColumn("Empleado"),
+                    "nombre":st.column_config.TextColumn("Solicitado por"),
+                    "empleado":st.column_config.NumberColumn("Empleado"),
+                    "entregado_nombre":st.column_config.TextColumn("Entregado por"),
+                    "entregado_por":st.column_config.TextColumn("ID ToolCrib"),
                     "maquina": st.column_config.TextColumn("Máquina"),
                     "herramienta": st.column_config.TextColumn("Herramienta"),
                     "tipo_cambio": st.column_config.TextColumn("Tipo Cambio"),
@@ -632,7 +638,8 @@ if rol in ["toolcrib","supervisor"]:
                         "tipo_cambio":row["tipo_cambio"],
                         "motivo":row["motivo"],
                         "precio":row["precio"],
-                        "entregado_por":st.session_state["usuario"]
+                        "entregado_por":st.session_state["usuario"],
+                        "entregado_nombre":st.session_state.get("nombre","")    
                         }
 
                         supabase.table("registros").insert(data).execute()
