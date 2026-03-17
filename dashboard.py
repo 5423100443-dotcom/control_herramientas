@@ -314,6 +314,11 @@ with tab_dashboard:
 
     response = supabase.table("registros").select("*").execute()
     df = pd.DataFrame(response.data)
+    if "nombre" not in df.columns: 
+        df["nombre"] = ""
+
+    if "entregdo_nombre" not in df.columns:
+        df["entregado_nombre"] = ""
 
     if rol == "tecnico":
         df = df[df["empleado"] == st.session_state["usuario"]]
