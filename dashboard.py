@@ -314,11 +314,31 @@ with tab_dashboard:
 
     response = supabase.table("registros").select("*").execute()
     df = pd.DataFrame(response.data)
-    if "nombre" not in df.columns: 
-        df["nombre"] = ""
-
-    if "entregado_nombre" not in df.columns:
-        df["entregado_nombre"] = ""
+        # Si no hay datos evitar crash
+    if df.empty:
+        st.warning("No hay registros")
+        st.stop()
+    
+    # asegurar columnas necesarias
+    columnas = [
+        "fecha",
+        "nombre",
+        "empleado",
+        "entregado_nombre",
+        "entregado_por",
+        "maquina",
+        "herramienta",
+        "tipo_cambio",
+        "motivo",
+        "precio"
+    ]
+    
+    for col in columnas:
+        if col not in df.columns:
+            df[col] = ""
+    
+    # convertir fecha seguro
+    df["fecha"] = pd.to_datetime(df["fecha"], errors="coerce")
 
     if rol == "tecnico":
         df = df[df["empleado"] == st.session_state["usuario"]]
