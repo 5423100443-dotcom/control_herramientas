@@ -625,7 +625,7 @@ if rol in ["toolcrib","supervisor"]:
                         data = {
                         "fecha":row["fecha"],
                         "empleado":row["empleado"],
-                        "nombre":row.get("nombre","")    
+                        "nombre":row.get("nombre",""),    
                         "maquina":row["maquina"],
                         "herramienta":row["herramienta"],
                         "descripcion":row["descripcion"],
