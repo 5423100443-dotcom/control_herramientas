@@ -334,6 +334,7 @@ with tab_dashboard:
         "entregado_por",
         "maquina",
         "herramienta",
+        "descripcion",
         "tipo_cambio",
         "motivo",
         "precio"
@@ -453,6 +454,7 @@ with tab_dashboard:
                 "entregado_por",
                 "maquina",
                 "herramienta",
+                "descricion",
                 "tipo_cambio",
                 "motivo",
                 "precio"
@@ -475,6 +477,7 @@ with tab_dashboard:
                     "entregado_por":st.column_config.TextColumn("#ToolCrib"),
                     "maquina": st.column_config.TextColumn("Máquina"),
                     "herramienta": st.column_config.TextColumn("Herramienta"),
+                    "descripcion":st.column_config.TextColumn("Descripcion")
                     "tipo_cambio": st.column_config.TextColumn("Tipo Cambio"),
                     "motivo": st.column_config.TextColumn("Motivo"),
                     "precio": st.column_config.NumberColumn(
