@@ -618,7 +618,6 @@ if rol in ["toolcrib","supervisor"]:
             df_sol=df_sol[df_sol["estado"].str.contains("pendiente",case=False,na=False)]
             if df_sol.empty:
                 st.warning("No hay solicitudes pendientes")
-                st.stop()
 
             df_sol["fecha"]=pd.to_datetime(df_sol["fecha"],errors="coerce")
 
