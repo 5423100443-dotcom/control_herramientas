@@ -589,6 +589,9 @@ with tab_dashboard:
             st.markdown("## 📋 Historial")
             
             st.dataframe(df_filtrado)
+
+st.write(response)
+st.write(response.data)
 # =========================
 # TOOLCRIB
 # =========================
