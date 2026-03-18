@@ -643,6 +643,8 @@ if rol in ["toolcrib","supervisor"]:
                         st.write(f"Máquina: {row.get('maquina','')}")
         
                         st.write(f"Herramienta: {row.get('herramienta','')}")
+                        
+                        st.write(f"Descripcion: {row.get('descripcion','')}")
         
                     with col2:
         
