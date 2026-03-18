@@ -596,13 +596,27 @@ with tab_dashboard:
 if rol in ["toolcrib","supervisor"]:
 
     with tab_solicitudes:
+        st_autorefresh(interval=3000,key="solicitudes_refresh")
 
         st.subheader("📦 Solicitudes")
 
         response = supabase.table("solicitudes_herramienta") \
         .select("*") \
-        .eq("estado","pendiente") \
         .execute()
+
+        df_sol = pd.DataFrame(response.data)
+
+        if not df_sol.empty:
+
+        # asegurar columna estado
+        if "estado" not in df_sol.columns:
+        df_sol["estado"]="pendiente"
+
+        # limpiar texto
+        df_sol["estado"]=df_sol["estado"].astype(str).str.strip().str.lower()
+
+        # filtrar pendientes
+        df_sol=df_sol[df_sol["estado"]=="pendiente"]
 
         df_sol = pd.DataFrame(response.data)
         pendientes = len(df_sol)
