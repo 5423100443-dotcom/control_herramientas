@@ -640,7 +640,15 @@ if rol in ["toolcrib","supervisor"]:
         
                 for i,row in df_sol.iterrows():
         
-                    st.markdown("---")
+                    st.markdown("""
+                    <div style="
+                    height:2px;
+                    background-color:white;
+                    margin-top:25px;
+                    margin-bottom:25px;
+                    opacity:0.7;
+                    "></div>
+                    """, unsafe_allow_html=True)
         
                     col1,col2,col3=st.columns([2,2,1])
         
