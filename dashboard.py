@@ -317,6 +317,7 @@ with tab_dashboard:
         # Si no hay datos evitar crash
     if df.empty:
         st.warning("No hay registros")
+        st.stop()
         
     
     # asegurar columnas necesarias
