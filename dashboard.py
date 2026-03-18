@@ -38,34 +38,12 @@ if "mostrar_bienvenida" not in st.session_state:
 if "usuario" not in st.session_state:
     st.session_state["usuario"] = None
 
-if "nombre" not in st.session_state:
-    st.session_state["nombre"] = None
-
 if "rol" not in st.session_state:
     st.session_state["rol"] = None
 
 # refresh automático
-if st.session_state["autenticado"] and not st.session_state["mostrar_bienvenida"]:
-    st_autorefresh(interval=5000, key="refresh")
-# =========================
-# RESTAURAR SESIÓN
-# =========================
-
-params = st.query_params
-
-if "usuario" in params and "rol" in params:
-
-    st.session_state["autenticado"] = True
-    st.session_state["usuario"] = params["usuario"]
-    st.session_state["rol"] = params["rol"]
-
-    response = supabase.table("usuarios") \
-        .select("nombre") \
-        .eq("empleado", params["usuario"]) \
-        .execute()
-
-    if response.data:
-        st.session_state["nombre"] = response.data[0]["nombre"]
+if st.session_state["autenticado"]:
+    st_autorefresh(interval=10000, key="refresh")
 
 # =========================
 # LOGIN
@@ -107,10 +85,6 @@ def login():
                     st.session_state["mostrar_bienvenida"] = True
                     st.session_state["usuario"] = usuario
                     st.session_state["rol"] = usuario_data["rol"].lower()
-                    st.query_params["usuario"] = usuario
-                    st.session_state["nombre"] = usuario_data["nombre"]
-                    st.query_params["rol"] = usuario_data["rol"].lower()
-                    
 
                     st.rerun()
 
@@ -193,8 +167,7 @@ if st.session_state["mostrar_bienvenida"]:
 # =========================
 
 if st.button("Cerrar sesión"):
-    st.session_state.clear()
-    st.query_params.clear()
+    st.session_state["autenticado"] = False
     st.rerun()
 
 # =========================
@@ -227,85 +200,35 @@ def poner_fondo():
 
 poner_fondo()
 
-#=====================================================
-#Configuracion color botones entregar y cerrar secion
-#=====================================================
-
-st.markdown("""
-<style>
-
-/* BOTON CERRAR SESION */
-button[data-testid="baseButton-secondary"] {
-    background-color: transparent !important;
-    color: white !important;
-    border: 1px solid rgba(255,255,255,0.4) !important;
-}
-
-/* BOTON ENTREGAR */
-button[kind="secondary"] {
-    background-color: transparent !important;
-    color: white !important;
-}
-
-/* HOVER */
-button[data-testid="baseButton-secondary"]:hover,
-button[kind="secondary"]:hover {
-    background-color: rgba(255,255,255,0.15) !important;
-    color: white !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-
 # =========================
 # TITULO
 # =========================
 
 st.title("🏭 Sistema de Control de Herramientas CNC")
 rol = st.session_state["rol"]
-col1, col2 = st.columns([8,2])
-
-st.markdown("""
-<style>
-
-.user-info {
-    color: white;
-    font-size: 18px;
-    font-weight: 500;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-
-with col2:
-    st.markdown(
-        f"""
-        <div style="text-align:right; font-size:16px; color:white; front-wheirht:600">
-        👤 <b>{st.session_state.get('nombre','')}({st.session_state['usuario']})</b><br>
-        🔐 {st.session_state['rol'].capitalize()}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-
 
 # =========================
-# TABS
+# TABS SEGUN ROL
 # =========================
 
-if rol == "tecnico":
+if rol == "operador":
 
     tab_dashboard = st.tabs(["📊 Dashboard"])[0]
 
-else:
+elif rol == "toolcrib":
+
+    tab_solicitudes, tab_dashboard = st.tabs([
+        "📦 Solicitudes",
+        "📊 Dashboard"
+    ])
+
+elif rol == "supervisor":
 
     tab_dashboard, tab_solicitudes = st.tabs([
         "📊 Dashboard",
         "📦 Tool Crib"
     ])
+
 # =========================
 # DASHBOARD
 # =========================
@@ -314,43 +237,10 @@ with tab_dashboard:
 
     response = supabase.table("registros").select("*").execute()
     df = pd.DataFrame(response.data)
-        # Si no hay datos evitar crash
+
     if df.empty:
         st.warning("No hay registros")
         st.stop()
-    
-    # asegurar columnas necesarias
-    columnas = [
-        "fecha",
-        "nombre",
-        "empleado",
-        "entregado_nombre",
-        "entregado_por",
-        "maquina",
-        "herramienta",
-        "tipo_cambio",
-        "motivo",
-        "precio"
-    ]
-    
-    for col in columnas:
-        if col not in df.columns:
-            df[col] = ""
-    
-    # convertir fecha seguro
-    df["fecha"] = pd.to_datetime(df["fecha"], errors="coerce")
-
-    if rol == "tecnico":
-        df = df[df["empleado"] == st.session_state["usuario"]]
-
-    elif rol == "toolcrib":
-        df = df[df["entregado_por"] == st.session_state["usuario"]]
-
-    elif rol == "supervisor":
-        df = df
-
-    if df.empty:
-        st.warning("No hay registros")
 
     df["fecha"] = pd.to_datetime(df["fecha"])
     df["mes"] = df["fecha"].dt.strftime("%Y-%m")
@@ -376,219 +266,196 @@ with tab_dashboard:
         empleado = st.session_state["usuario"]
     df_filtrado = df.copy()
 
-    if rol == "supervisor":
+    # verificar si hay filtros
+    if mes == "Seleccionar" and maquina == "Seleccionar" and empleado == "Seleccionar":
+        st.info("Selecciona al menos un filtro para mostrar información.")
+        st.stop()
+    
+    # aplicar filtros
+    if mes != "Seleccionar":
+        df_filtrado = df_filtrado[df_filtrado["mes"] == mes]
+    
+    if maquina != "Seleccionar":
+        df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina]
+    
+    if empleado != "Seleccionar":
+        df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
+    
+    # verificar si quedó vacío
+    if df_filtrado.empty:
+        st.warning("No hay datos con los filtros seleccionados.")
+        st.stop()
 
-        if mes == "Seleccionar" and maquina == "Seleccionar" and empleado == "Seleccionar":
-            st.warning("Selecciona al menos un filtro para mostrar información.")
-            mostrar_dashboard = False
-        else:
-            mostrar_dashboard = True
-
+        # =========================
+    # KPIs
+    # =========================
+    st.markdown("## 📌 Resumen General")
+    
+    col1, col2 = st.columns(2)
+    
+    total_gastado = df_filtrado["precio"].sum()
+    total_cambios = len(df_filtrado)
+    
+    with col1:
+        st.metric("💰 Total Gastado", f"${total_gastado:,.2f}")
+    
+    with col2:
+        st.metric("🔧 Total de Cambios", total_cambios)
+    
+    # =========================
+    # HISTORIAL
+    # =========================
+    st.markdown("## 📋 Historial")
+    
+    if not df_filtrado.empty:
+    
+        tabla = df_filtrado[[
+            "fecha",
+            "empleado",
+            "maquina",
+            "herramienta",
+            "tipo_cambio",
+            "motivo",
+            "precio"
+        ]].copy()
+    
+        # Calcular altura dinámica según cantidad de filas
+        filas = len(tabla)
+        alto_tabla = min(600, 60 + (filas * 35))  # 35px por fila + encabezado
+    
+        st.data_editor(
+            tabla,
+            hide_index=True,
+            width="stretch",
+            height=alto_tabla,
+            column_config={
+                "fecha": st.column_config.DatetimeColumn("Fecha"),
+                "empleado": st.column_config.NumberColumn("Empleado"),
+                "maquina": st.column_config.TextColumn("Máquina"),
+                "herramienta": st.column_config.TextColumn("Herramienta"),
+                "tipo_cambio": st.column_config.TextColumn("Tipo Cambio"),
+                "motivo": st.column_config.TextColumn("Motivo"),
+                "precio": st.column_config.NumberColumn(
+                    "Precio ($)",
+                    format="$ %.2f"
+                )
+            },
+            disabled=True
+        )
+    
     else:
-
-        if mes == "Seleccionar" and maquina == "Seleccionar":
-            st.warning("Selecciona Mes o Máquina para ver información.")
-            mostrar_dashboard = False
-        else:
-            mostrar_dashboard = True
-
-    if mostrar_dashboard:
-        
-
-         # aplicar filtros
-        if mes != "Seleccionar":
-            df_filtrado = df_filtrado[df_filtrado["mes"] == mes]
-                
-        if maquina != "Seleccionar":
-            df_filtrado = df_filtrado[df_filtrado["maquina"] == maquina]
-                
-        if rol == "supervisor" and empleado != "Seleccionar":
-            df_filtrado = df_filtrado[df_filtrado["empleado"] == empleado]
-            
+        st.info("No hay registros para los filtros seleccionados.")
+    # =========================
+    # GRÁFICA 1 - CANTIDAD CAMBIOS
+    # =========================
+    df_cambios = (
+        df_filtrado
+        .groupby("herramienta")
+        .size()
+        .reset_index(name="cantidad_cambios")
+        .sort_values(by="cantidad_cambios", ascending=False)
+    )
     
-        
-               
-        # verificar si quedó vacío
-        if df_filtrado.empty:
-            st.warning("No hay datos con los filtros seleccionados.")
-            
+    if not df_cambios.empty:
     
-        # =========================
-        # KPIs
-        # =========================
-        st.markdown("## 📌 Resumen General")
+        fig_cambios = px.bar(
+            df_cambios,
+            x="herramienta",
+            y="cantidad_cambios",
+            text="cantidad_cambios",
+            color="cantidad_cambios",
+            color_continuous_scale="Blues",
+            title="🔧 Cantidad de Cambios por Herramienta"
+        )
+    
+        fig_cambios.update_traces(
+            textposition="outside",
+            cliponaxis=False
+        )
+    
+        fig_cambios.update_layout(
+            template="plotly_dark",
+            title_x=0.5,
+            xaxis_title="Herramienta",
+            yaxis_title="Cantidad de Cambios",
+            margin=dict(t=120)  # 👈 espacio extra arriba
+        )
+    
+        fig_cambios.update_layout(
+            template="plotly_dark",
+            title_x=0.5,
+            xaxis_title="Herramienta",
+            yaxis_title="Cantidad de Cambios"
+        )
+    
+        st.plotly_chart(fig_cambios, use_container_width=True)
+    
+    else:
+        st.info("No hay datos para mostrar.")
+    
+    # =========================
+    # GRÁFICA 2 - GASTO POR HERRAMIENTA
+    # =========================
+    df_gasto = (
+        df_filtrado
+        .groupby("herramienta")["precio"]
+        .sum()
+        .reset_index()
+        .sort_values(by="precio", ascending=False)
+    )
+    if not df_gasto.empty:
+    
+        fig_gasto = px.bar(
+            df_gasto,
+            x="herramienta",
+            y="precio",
+            text="precio",
+            color="precio",
+            color_continuous_scale="Greens",
+            title="💰 Gasto Total por Herramienta"
+        )
+    
+        fig_gasto.update_traces(
+            texttemplate='$%{text:,.2f}',
+            textposition="outside",
+            cliponaxis=False
+        )
+    
+        fig_gasto.update_layout(
+            template="plotly_dark",
+            title_x=0.5,
+            xaxis_title="Herramienta",
+            yaxis_title="Total Gastado ($)",
+            margin=dict(t=120)  # 👈 espacio arriba
+        )
+    
+        fig_gasto.update_layout(
+            template="plotly_dark",
+            title_x=0.5,
+            xaxis_title="Herramienta",
+            yaxis_title="Total Gastado ($)"
+        )
+    
+        st.plotly_chart(fig_gasto, use_container_width=True)
+    
+    else:
+        st.info("No hay datos para mostrar.")
         
-        col1, col2 = st.columns(2)
+        df_filtrado = df_filtrado.sort_values("fecha", ascending=False)
         
-        total_gastado = df_filtrado["precio"].sum()
-        total_cambios = len(df_filtrado)
+        st.markdown("## 📌 Resumen")
+        
+        col1,col2 = st.columns(2)
         
         with col1:
-            st.metric("💰 Total Gastado", f"${total_gastado:,.2f}")
+            st.metric("💰 Total Gastado", f"${df_filtrado['precio'].sum():,.2f}")
         
         with col2:
-            st.metric("🔧 Total de Cambios", total_cambios)
+            st.metric("🔧 Cambios", len(df_filtrado))
         
-        # =========================
-        # HISTORIAL
-        # =========================
         st.markdown("## 📋 Historial")
         
-        if not df_filtrado.empty:
-        
-            tabla = df_filtrado[[
-                "fecha",
-                "nombre",
-                "empleado",
-                "entregado_nombre",
-                "entregado_por",
-                "maquina",
-                "herramienta",
-                "tipo_cambio",
-                "motivo",
-                "precio"
-            ]].copy()
-        
-            # Calcular altura dinámica según cantidad de filas
-            filas = len(tabla)
-            alto_tabla = min(600, 60 + (filas * 35))  # 35px por fila + encabezado
-        
-            st.data_editor(
-                tabla,
-                hide_index=True,
-                width="stretch",
-                height=alto_tabla,
-                column_config={
-                    "fecha": st.column_config.DatetimeColumn("Fecha"),
-                    "nombre":st.column_config.TextColumn("Solicitado por"),
-                    "empleado":st.column_config.NumberColumn("Empleado"),
-                    "entregado_nombre":st.column_config.TextColumn("Entregado por"),
-                    "entregado_por":st.column_config.TextColumn("ID ToolCrib"),
-                    "maquina": st.column_config.TextColumn("Máquina"),
-                    "herramienta": st.column_config.TextColumn("Herramienta"),
-                    "tipo_cambio": st.column_config.TextColumn("Tipo Cambio"),
-                    "motivo": st.column_config.TextColumn("Motivo"),
-                    "precio": st.column_config.NumberColumn(
-                        "Precio ($)",
-                        format="$ %.2f"
-                    )
-                },
-                disabled=True
-            )
-        
-        else:
-            st.info("No hay registros para los filtros seleccionados.")
-        # =========================
-        # GRÁFICA 1 - CANTIDAD CAMBIOS
-        # =========================
-        df_cambios = (
-            df_filtrado
-            .groupby("herramienta")
-            .size()
-            .reset_index(name="cantidad_cambios")
-            .sort_values(by="cantidad_cambios", ascending=False)
-        )
-        
-        if not df_cambios.empty:
-        
-            fig_cambios = px.bar(
-                df_cambios,
-                x="herramienta",
-                y="cantidad_cambios",
-                text="cantidad_cambios",
-                color="cantidad_cambios",
-                color_continuous_scale="Blues",
-                title="🔧 Cantidad de Cambios por Herramienta"
-            )
-        
-            fig_cambios.update_traces(
-                textposition="outside",
-                cliponaxis=False
-            )
-        
-            fig_cambios.update_layout(
-                template="plotly_dark",
-                title_x=0.5,
-                xaxis_title="Herramienta",
-                yaxis_title="Cantidad de Cambios",
-                margin=dict(t=120)  # 👈 espacio extra arriba
-            )
-        
-            fig_cambios.update_layout(
-                template="plotly_dark",
-                title_x=0.5,
-                xaxis_title="Herramienta",
-                yaxis_title="Cantidad de Cambios"
-            )
-        
-            st.plotly_chart(fig_cambios, use_container_width=True)
-        
-        else:
-            st.info("No hay datos para mostrar.")
-        
-        # =========================
-        # GRÁFICA 2 - GASTO POR HERRAMIENTA
-        # =========================
-        df_gasto = (
-            df_filtrado
-            .groupby("herramienta")["precio"]
-            .sum()
-            .reset_index()
-            .sort_values(by="precio", ascending=False)
-        )
-        if not df_gasto.empty:
-        
-            fig_gasto = px.bar(
-                df_gasto,
-                x="herramienta",
-                y="precio",
-                text="precio",
-                color="precio",
-                color_continuous_scale="Greens",
-                title="💰 Gasto Total por Herramienta"
-            )
-        
-            fig_gasto.update_traces(
-                texttemplate='$%{text:,.2f}',
-                textposition="outside",
-                cliponaxis=False
-            )
-        
-            fig_gasto.update_layout(
-                template="plotly_dark",
-                title_x=0.5,
-                xaxis_title="Herramienta",
-                yaxis_title="Total Gastado ($)",
-                margin=dict(t=120)  # 👈 espacio arriba
-            )
-        
-            fig_gasto.update_layout(
-                template="plotly_dark",
-                title_x=0.5,
-                xaxis_title="Herramienta",
-                yaxis_title="Total Gastado ($)"
-            )
-        
-            st.plotly_chart(fig_gasto, use_container_width=True)
-        
-        else:
-            st.info("No hay datos para mostrar.")
-            
-            df_filtrado = df_filtrado.sort_values("fecha", ascending=False)
-            
-            st.markdown("## 📌 Resumen")
-            
-            col1,col2 = st.columns(2)
-            
-            with col1:
-                st.metric("💰 Total Gastado", f"${df_filtrado['precio'].sum():,.2f}")
-            
-            with col2:
-                st.metric("🔧 Cambios", len(df_filtrado))
-            
-            st.markdown("## 📋 Historial")
-            
-            st.dataframe(df_filtrado)
+        st.dataframe(df_filtrado)
 # =========================
 # TOOLCRIB
 # =========================
@@ -599,87 +466,51 @@ if rol in ["toolcrib","supervisor"]:
 
         st.subheader("📦 Solicitudes")
 
-        response = supabase.table("solicitudes_herramienta").select("*").execute()
+        response = supabase.table("solicitudes_herramienta") \
+        .select("*") \
+        .eq("estado","pendiente") \
+        .execute()
 
         df_sol = pd.DataFrame(response.data)
-        st.write("DEBUG",len(df_sol))
 
         if df_sol.empty:
-
             st.info("No hay solicitudes")
 
         else:
 
-            if "estado" not in df_sol.columns:
-                df_sol["estado"]="pendiente"
-
-            df_sol["estado"]=df_sol["estado"].astype(str).str.strip().str.lower()
-
-            df_sol=df_sol[df_sol["estado"].str.contains("pendiente",case=False,na=False)]
-            if df_sol.empty:
-                st.warning("No hay solicitudes pendientes")
-
-            df_sol["fecha"]=pd.to_datetime(df_sol["fecha"],errors="coerce")
-
-            df_sol=df_sol.sort_values("fecha",ascending=False)
-
-            pendientes=len(df_sol)
-
-            st.subheader(f"Solicitudes ({pendientes})")
-
             for i,row in df_sol.iterrows():
 
-                st.markdown("---")
-
-                col1,col2,col3=st.columns([2,2,1])
+                col1,col2,col3 = st.columns([2,2,1])
 
                 with col1:
-
-                    st.write(f"Empleado: {row.get('nombre','Sin nombre')} ({row['empleado']})")
-
-                    st.write(f"Máquina: {row['maquina']}")
-
-                    st.write(f"Herramienta: {row['herramienta']}")
+                    st.write("Empleado:",row["empleado"])
+                    st.write("Máquina:",row["maquina"])
 
                 with col2:
-
-                    if "inserto" in str(row["tipo_cambio"]).lower():
-
-                        st.info(f"Inserto: {row['descripcion']}")
-
-                        st.write(f"Cantidad: {row['cantidad_insertos']}")
-
-                    else:
-
-                        st.success("Herramienta completa")
-
-                    st.write(f"Motivo: {row['motivo']}")
+                    st.write("Herramienta:",row["herramienta"])
+                    st.write("Motivo:",row["motivo"])
 
                 with col3:
 
-                    if st.button("Entregar",key=f"entregar_{row['id']}"):
+                    if st.button("Entregar",key=i):
 
-                        data={
-
-                            "fecha":row["fecha"],
-                            "empleado":row["empleado"],
-                            "nombre":row.get("nombre",""),
-                            "maquina":row["maquina"],
-                            "herramienta":row["herramienta"],
-                            "descripcion":row["descripcion"],
-                            "tipo_cambio":row["tipo_cambio"],
-                            "motivo":row["motivo"],
-                            "precio":row["precio"],
-                            "entregado_por":st.session_state["usuario"],
-                            "entregado_nombre":st.session_state.get("nombre","")
-
+                        data = {
+                        "fecha":row["fecha"],
+                        "empleado":row["empleado"],
+                        "maquina":row["maquina"],
+                        "herramienta":row["herramienta"],
+                        "descripcion":row["descripcion"],
+                        "tipo_cambio":row["tipo_cambio"],
+                        "motivo":row["motivo"],
+                        "precio":row["precio"],
+                        "entregado_por":st.session_state["usuario"]
                         }
 
                         supabase.table("registros").insert(data).execute()
 
-                        supabase.table("solicitudes_herramienta")\
-                        .update({"estado":"entregado"})\
-                        .eq("id",row["id"])\
+                        supabase.table("solicitudes_herramienta") \
+                        .update({"estado":"entregado"}) \
+                        .eq("id",row["id"]) \
                         .execute()
 
                         st.rerun()
