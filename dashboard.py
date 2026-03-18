@@ -679,7 +679,7 @@ if rol in ["toolcrib","supervisor"]:
                             supabase.table("solicitudes_herramienta")\
                             .update({"estado":"entregado"})\
                             .eq("empleado",row["empleado"])\
-                            .eq("fecha",str(row["fecha"]))
+                            .eq("fecha",str(row["fecha"]))\
                             .execute()
         
                             st.rerun()
