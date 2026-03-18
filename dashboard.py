@@ -602,88 +602,87 @@ if rol in ["toolcrib","supervisor"]:
         response = supabase.table("solicitudes_herramienta").select("*").execute()
 
         df_sol = pd.DataFrame(response.data)
-        st.write("DEBUG",len(df_sol))
-
+        
         if df_sol.empty:
-
             st.info("No hay solicitudes")
-
+        
         else:
-
-            if "estado" not in df_sol.columns:
-                df_sol["estado"]="pendiente"
-
+        
+            df_sol["estado"]=df_sol.get("estado","pendiente")
+            df_sol["estado"]=df_sol["estado"].fillna("pendiente")
             df_sol["estado"]=df_sol["estado"].astype(str).str.strip().str.lower()
-
+        
             df_sol=df_sol[df_sol["estado"].str.contains("pendiente",case=False,na=False)]
+        
             if df_sol.empty:
                 st.warning("No hay solicitudes pendientes")
-
-            df_sol["fecha"]=pd.to_datetime(df_sol["fecha"],errors="coerce")
-
-            df_sol=df_sol.sort_values("fecha",ascending=False)
-
-            pendientes=len(df_sol)
-
-            st.subheader(f"Solicitudes ({pendientes})")
-
-            for i,row in df_sol.iterrows():
-
-                st.markdown("---")
-
-                col1,col2,col3=st.columns([2,2,1])
-
-                with col1:
-
-                    st.write(f"Empleado: {row.get('nombre','Sin nombre')} ({row['empleado']})")
-
-                    st.write(f"Máquina: {row['maquina']}")
-
-                    st.write(f"Herramienta: {row['herramienta']}")
-
-                with col2:
-
-                    if "inserto" in str(row["tipo_cambio"]).lower():
-
-                        st.info(f"Inserto: {row['descripcion']}")
-
-                        st.write(f"Cantidad: {row['cantidad_insertos']}")
-
-                    else:
-
-                        st.success("Herramienta completa")
-
-                    st.write(f"Motivo: {row['motivo']}")
-
-                with col3:
-
-                    if st.button("Entregar",key=f"entregar_{row['id']}"):
-
-                        data={
-
-                            "fecha":row["fecha"],
-                            "empleado":row["empleado"],
-                            "nombre":row.get("nombre",""),
-                            "maquina":row["maquina"],
-                            "herramienta":row["herramienta"],
-                            "descripcion":row["descripcion"],
-                            "tipo_cambio":row["tipo_cambio"],
-                            "motivo":row["motivo"],
-                            "precio":row["precio"],
-                            "entregado_por":st.session_state["usuario"],
-                            "entregado_nombre":st.session_state.get("nombre","")
-
-                        }
-
-                        supabase.table("registros").insert(data).execute()
-
-                        supabase.table("solicitudes_herramienta")\
-                        .update({"estado":"entregado"})\
-                        .eq("id",row["id"])\
-                        .execute()
-
-                        st.rerun()
-
+        
+            else:
+        
+                df_sol["fecha"]=pd.to_datetime(df_sol.get("fecha"),errors="coerce")
+        
+                df_sol=df_sol.sort_values("fecha",ascending=False)
+        
+                pendientes=len(df_sol)
+        
+                st.subheader(f"Solicitudes ({pendientes})")
+        
+                for i,row in df_sol.reset_index().iterrows():
+        
+                    st.markdown("---")
+        
+                    col1,col2,col3=st.columns([2,2,1])
+        
+                    with col1:
+        
+                        st.write(f"Empleado: {row.get('nombre','Sin nombre')} ({row.get('empleado','')})")
+        
+                        st.write(f"Máquina: {row.get('maquina','')}")
+        
+                        st.write(f"Herramienta: {row.get('herramienta','')}")
+        
+                    with col2:
+        
+                        if "inserto" in str(row.get("tipo_cambio","")).lower():
+        
+                            st.info(f"Inserto: {row.get('descripcion','')}")
+        
+                            st.write(f"Cantidad: {row.get('cantidad_insertos',0)}")
+        
+                        else:
+        
+                            st.success("Herramienta completa")
+        
+                        st.write(f"Motivo: {row.get('motivo','')}")
+        
+                    with col3:
+        
+                        if st.button("Entregar",key=f"entregar_{i}"):
+        
+                            data={
+        
+                                "fecha":row.get("fecha"),
+                                "empleado":row.get("empleado"),
+                                "nombre":row.get("nombre",""),
+                                "maquina":row.get("maquina"),
+                                "herramienta":row.get("herramienta"),
+                                "descripcion":row.get("descripcion"),
+                                "tipo_cambio":row.get("tipo_cambio"),
+                                "motivo":row.get("motivo"),
+                                "precio":row.get("precio"),
+                                "entregado_por":st.session_state["usuario"],
+                                "entregado_nombre":st.session_state.get("nombre","")
+        
+                            }
+        
+                            supabase.table("registros").insert(data).execute()
+        
+                            supabase.table("solicitudes_herramienta")\
+                            .update({"estado":"entregado"})\
+                            .eq("fecha",row["fecha"])\
+                            .execute()
+        
+                            st.rerun()
 
 
 
