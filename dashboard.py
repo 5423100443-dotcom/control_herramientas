@@ -351,7 +351,9 @@ with tab_dashboard:
 
     if df.empty:
         st.warning("No hay registros")
-        df = pd.DataFrame(columns=columnas)
+        mostrar_dashboard = False
+    else:
+        mostrar_dashboard = True
 
     df["fecha"] = pd.to_datetime(df["fecha"])
     df["mes"] = df["fecha"].dt.strftime("%Y-%m")
