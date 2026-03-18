@@ -599,11 +599,10 @@ if rol in ["toolcrib","supervisor"]:
 
         st.subheader("📦 Solicitudes")
 
-        st_autorefresh(interval=3000,key="sol_refresh")
-
         response = supabase.table("solicitudes_herramienta").select("*").execute()
 
         df_sol = pd.DataFrame(response.data)
+        st.write("DEBUG",len(df_sol))
 
         if df_sol.empty:
 
@@ -616,7 +615,7 @@ if rol in ["toolcrib","supervisor"]:
 
             df_sol["estado"]=df_sol["estado"].astype(str).str.strip().str.lower()
 
-            df_sol=df_sol[df_sol["estado"]=="pendiente"]
+            df_sol=df_sol[df_sol["estado"].str.contains("pendiente",case=False,na=False)]
             if df_sol.empty:
                 st.warning("No hay solicitudes pendientes")
                 st.stop()
