@@ -663,21 +663,21 @@ if rol in ["toolcrib","supervisor"]:
                         if st.button("Entregar",key=f"entregar_{i}"):
         
                             data={
-        
-                                "fecha":str(row.get("fecha")),
-                                "empleado":row.get("empleado"),
-                                "nombre":row.get("nombre",""),
-                                "maquina":row.get("maquina"),
-                                "herramienta":row.get("herramienta"),
-                                "descripcion":row.get("descripcion"),
-                                "tipo_cambio":row.get("tipo_cambio"),
-                                "motivo":row.get("motivo"),
-                                "precio":row.get("precio"),
-                                "entregado_por":st.session_state["usuario"],
-                                "entregado_nombre":st.session_state.get("nombre","")
-        
-                            }
-        
+
+                                        "fecha": str(row.get("fecha")),
+                                        "empleado": str(row.get("empleado")),
+                                        "nombre": str(row.get("nombre","")),
+                                        "maquina": str(row.get("maquina")),
+                                        "herramienta": str(row.get("herramienta")),
+                                        "descripcion": str(row.get("descripcion")),
+                                        "tipo_cambio": str(row.get("tipo_cambio")),
+                                        "motivo": str(row.get("motivo")),
+                                        "precio": float(row.get("precio") or 0),
+                                        "entregado_por": str(st.session_state["usuario"]),
+                                        "entregado_nombre": str(st.session_state.get("nombre",""))
+                                    
+                                    }
+                                        
                             supabase.table("registros").insert(data).execute()
         
                             supabase.table("solicitudes_herramienta")\
