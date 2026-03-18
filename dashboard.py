@@ -84,7 +84,7 @@ def login():
         unsafe_allow_html=True
         )
 
-        st.markdown("<hr style= 'border:1px solid white; margin-top:20px; margin-bottom:20px;'>", unsafe_allow_html=True)
+        st.markdown("<hr style= 'border:2px solid rgba(255,255,255,0.3);'>", unsafe_allow_html=True)
 
         usuario = st.text_input("Número de Empleado")
         password = st.text_input("Contraseña", type="password")
