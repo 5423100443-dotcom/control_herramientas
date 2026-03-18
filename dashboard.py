@@ -315,8 +315,6 @@ with tab_dashboard:
     response = supabase.table("registros").select("*").execute()
     df = pd.DataFrame(response.data)
         # Si no hay datos evitar crash
-    if df.empty:
-        st.warning("No hay registros")
         
     
     # asegurar columnas necesarias
