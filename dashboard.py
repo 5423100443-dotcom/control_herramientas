@@ -608,20 +608,19 @@ if rol in ["toolcrib","supervisor"]:
         
         else:
         
-            df_sol["estado"]=df_sol.get("estado","pendiente")
-            df_sol["estado"]=df_sol["estado"].fillna("pendiente")
-            df_sol["estado"]=df_sol["estado"].astype(str).str.strip().str.lower()
-        
-            df_sol=df_sol[df_sol["estado"].str.contains("pendiente",case=False,na=False)]
+            if "estado" not in df_sol.columns:
+                df_sol["estado"] = "pendiente"
+
+            df_sol["estado"] = df_sol["estado"].fillna("pendiente")
+            df_sol["estado"] = df_sol["estado"].astype(str).str.strip().str.lower()
+            df_sol = df_sol[df_sol["estado"] == "pendiente"]
         
             if df_sol.empty:
                 st.warning("No hay solicitudes pendientes")
         
             else:
         
-                df_sol["fecha"]=pd.to_datetime(df_sol.get("fecha"),errors="coerce")
-        
-                df_sol=df_sol.sort_values("fecha",ascending=False)
+                df_sol["fecha"] = pd.to_datetime(df_sol("fecha"),errors="coerce")
         
                 pendientes=len(df_sol)
         
@@ -679,7 +678,8 @@ if rol in ["toolcrib","supervisor"]:
         
                             supabase.table("solicitudes_herramienta")\
                             .update({"estado":"entregado"})\
-                            .eq("fecha",row["fecha"])\
+                            .eq("empleado",row["empleado"])\
+                            .eq("fecha",str(row["fecha"]))
                             .execute()
         
                             st.rerun()
