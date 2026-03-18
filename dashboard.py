@@ -263,7 +263,7 @@ button[kind="secondary"]:hover {
 # =========================
 
 st.title("🏭 Sistema de Control de Herramientas CNC")
-rol = st.session_state["rol"]
+rol = (st.session_state.get("rol","")).lower()
 col1, col2 = st.columns([8,2])
 
 st.markdown("""
@@ -314,10 +314,11 @@ with tab_dashboard:
 
     response = supabase.table("registros").select("*").execute()
     df = pd.DataFrame(response.data)
+    st.write("solicitudes recibidas:",len(df_sol))
         # Si no hay datos evitar crash
     if df.empty:
         st.warning("No hay registros")
-        st.stop()
+        df = pd.DataFrame(columns=columnas)
     
     # asegurar columnas necesarias
     columnas = [
