@@ -590,8 +590,7 @@ with tab_dashboard:
             
             st.dataframe(df_filtrado)
 
-st.write(response)
-st.write(response.data)
+
 # =========================
 # TOOLCRIB
 # =========================
@@ -623,13 +622,13 @@ if rol in ["toolcrib","supervisor"]:
         
             else:
         
-                df_sol["fecha"] = pd.to_datetime(df_sol("fecha"),errors="coerce")
+                df_sol["fecha"] = pd.to_datetime(df_sol["fecha"],errors="coerce")
         
                 pendientes=len(df_sol)
         
                 st.subheader(f"Solicitudes ({pendientes})")
         
-                for i,row in df_sol.reset_index().iterrows():
+                for i,row in df_sol.iterrows():
         
                     st.markdown("---")
         
