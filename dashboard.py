@@ -472,7 +472,7 @@ with tab_dashboard:
                     "nombre":st.column_config.TextColumn("Solicitado por"),
                     "empleado":st.column_config.NumberColumn("Empleado"),
                     "entregado_nombre":st.column_config.TextColumn("Entregado por"),
-                    "entregado_por":st.column_config.TextColumn("ID ToolCrib"),
+                    "entregado_por":st.column_config.TextColumn("ToolCrib"),
                     "maquina": st.column_config.TextColumn("Máquina"),
                     "herramienta": st.column_config.TextColumn("Herramienta"),
                     "tipo_cambio": st.column_config.TextColumn("Tipo Cambio"),
