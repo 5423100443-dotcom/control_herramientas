@@ -651,7 +651,7 @@ if rol in ["toolcrib","supervisor"]:
 
                 with col3:
 
-                    if st.button("Entregar",key=i):
+                    if st.button("Entregar",key=f"entregar_{row['id']}"):
 
                         data = {
                         "fecha":row["fecha"],
