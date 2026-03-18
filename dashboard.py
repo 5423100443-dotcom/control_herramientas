@@ -608,19 +608,19 @@ if rol in ["toolcrib","supervisor"]:
 
         if not df_sol.empty:
 
-        # asegurar columna estado
-        if "estado" not in df_sol.columns:
-        df_sol["estado"]="pendiente"
-
-        # limpiar texto
-        df_sol["estado"]=df_sol["estado"].astype(str).str.strip().str.lower()
-
-        # filtrar pendientes
-        df_sol=df_sol[df_sol["estado"]=="pendiente"]
-
-        df_sol = pd.DataFrame(response.data)
-        pendientes = len(df_sol)
-        st.subheader(f"Solicitudes:({pendientes})")
+            # asegurar columna estado
+            if "estado" not in df_sol.columns:
+            df_sol["estado"]="pendiente"
+    
+            # limpiar texto
+            df_sol["estado"]=df_sol["estado"].astype(str).str.strip().str.lower()
+    
+            # filtrar pendientes
+            df_sol=df_sol[df_sol["estado"]=="pendiente"]
+    
+            df_sol = pd.DataFrame(response.data)
+            pendientes = len(df_sol)
+            st.subheader(f"Solicitudes:({pendientes})")
         if pendientes > 0:
             st.warning(f"Hay {pendientes} solicitudes pendientes:")
 
