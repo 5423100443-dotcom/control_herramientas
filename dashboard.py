@@ -314,7 +314,6 @@ with tab_dashboard:
 
     response = supabase.table("registros").select("*").execute()
     df = pd.DataFrame(response.data)
-    st.write("solicitudes recibidas:",len(df_sol))
         # Si no hay datos evitar crash
     if df.empty:
         st.warning("No hay registros")
@@ -605,6 +604,7 @@ if rol in ["toolcrib","supervisor"]:
         response = supabase.table("solicitudes_herramienta").select("*").execute()
 
         df_sol = pd.DataFrame(response.data)
+        st.write("solicitudes recibidas:",len(df_sol))
         
         if df_sol.empty:
             st.info("No hay solicitudes")
