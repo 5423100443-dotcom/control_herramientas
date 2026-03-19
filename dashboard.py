@@ -454,7 +454,7 @@ with tab_dashboard:
                 "entregado_por",
                 "maquina",
                 "herramienta",
-                "descricion",
+                "descripcion",
                 "tipo_cambio",
                 "motivo",
                 "precio"
