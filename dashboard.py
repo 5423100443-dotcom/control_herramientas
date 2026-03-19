@@ -455,6 +455,7 @@ with tab_dashboard:
                 "maquina",
                 "herramienta",
                 "descripcion",
+                "numero_parte",
                 "tipo_cambio",
                 "motivo",
                 "precio"
@@ -478,6 +479,7 @@ with tab_dashboard:
                     "maquina": st.column_config.TextColumn("Máquina"),
                     "herramienta": st.column_config.TextColumn("Herramienta"),
                     "descripcion":st.column_config.TextColumn("Descripcion"),
+                    "numero_parte":st.column_config.TextColumn("Numero de parte")
                     "tipo_cambio": st.column_config.TextColumn("Tipo Cambio"),
                     "motivo": st.column_config.TextColumn("Motivo"),
                     "precio": st.column_config.NumberColumn(
@@ -693,6 +695,7 @@ if rol in ["toolcrib","supervisor"]:
                                         "maquina": str(row.get("maquina")),
                                         "herramienta": str(row.get("herramienta")),
                                         "descripcion": str(row.get("descripcion")),
+                                        "numero_parte":row.get("numero_parte","")
                                         "tipo_cambio": str(row.get("tipo_cambio")),
                                         "motivo": str(row.get("motivo")),
                                         "precio": float(row.get("precio") or 0),
