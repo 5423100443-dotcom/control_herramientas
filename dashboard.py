@@ -479,7 +479,7 @@ with tab_dashboard:
                     "maquina": st.column_config.TextColumn("Máquina"),
                     "herramienta": st.column_config.TextColumn("Herramienta"),
                     "descripcion":st.column_config.TextColumn("Descripcion"),
-                    "numero_parte":st.column_config.TextColumn("Numero de parte")
+                    "numero_parte":st.column_config.TextColumn("Numero de parte"),
                     "tipo_cambio": st.column_config.TextColumn("Tipo Cambio"),
                     "motivo": st.column_config.TextColumn("Motivo"),
                     "precio": st.column_config.NumberColumn(
