@@ -557,8 +557,8 @@ with tab_dashboard:
                 x="herramienta",
                 y="precio",
                 text="precio",
-                color="precio",
-                color_continuous_scale="Greens",
+                color="maquina",
+                barmode="group",
                 title="💰 Gasto Total por Herramienta"
             )
         
