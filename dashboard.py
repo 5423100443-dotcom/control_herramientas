@@ -497,7 +497,7 @@ with tab_dashboard:
         # =========================
         df_cambios = (
             df_filtrado
-            .groupby("herramienta")
+            .groupby(["maquina","herramienta"])
             .size()
             .reset_index(name="cantidad_cambios")
             .sort_values(by="cantidad_cambios", ascending=False)
@@ -510,8 +510,8 @@ with tab_dashboard:
                 x="herramienta",
                 y="cantidad_cambios",
                 text="cantidad_cambios",
-                color="cantidad_cambios",
-                color_continuous_scale="Blues",
+                color="maquina",
+                barmode="group",
                 title="🔧 Cantidad de Cambios por Herramienta"
             )
         
