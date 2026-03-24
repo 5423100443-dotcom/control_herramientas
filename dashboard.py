@@ -514,6 +514,8 @@ with tab_dashboard:
                 barmode="group",
                 title="🔧 Cantidad de Cambios por Herramienta"
             )
+            fig_cambios.update_traces(width=0.9)
+            fig_cambios.update_layout(bargrap=0.5)
         
             fig_cambios.update_traces(
                 textposition="outside",
