@@ -554,6 +554,7 @@ with tab_dashboard:
             .sort_values(by="precio", ascending=False)
             .head(top_n)
         )
+        if not df_gasto.empty:
             fig_gasto = px.bar(
                 df_gasto,
                 x="herramienta",
