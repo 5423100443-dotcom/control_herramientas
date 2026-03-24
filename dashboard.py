@@ -545,7 +545,7 @@ with tab_dashboard:
         # =========================
         df_gasto = (
             df_filtrado
-            .groupby("herramienta")["precio"]
+            .groupby(["maquina","herramienta"])["precio"]
             .sum()
             .reset_index()
             .sort_values(by="precio", ascending=False)
