@@ -372,6 +372,7 @@ with tab_dashboard:
     meses = ["Seleccionar"] + sorted(df["mes"].unique(), reverse=True)
     maquinas = ["Seleccionar"] + sorted(df["maquina"].unique())
     empleados = ["Seleccionar"] + sorted(df["empleado"].unique())
+    top_n = st.slider("cantidad de herramientas a mostrar",5,50,15)
 
     with col1:
         mes = st.selectbox("Mes", meses)
@@ -502,6 +503,7 @@ with tab_dashboard:
             .reset_index(name="cantidad_cambios")
             .sort_values(by="cantidad_cambios", ascending=False)
         )
+        df_cambios - df_cambios.sort_values("cantidad_cambios", ascending=false).head(top_n)
         
         if not df_cambios.empty:
         
@@ -543,15 +545,15 @@ with tab_dashboard:
         # =========================
         # GRÁFICA 2 - GASTO POR HERRAMIENTA
         # =========================
+        
         df_gasto = (
             df_filtrado
             .groupby(["maquina","herramienta"])["precio"]
             .sum()
             .reset_index()
             .sort_values(by="precio", ascending=False)
+            .head(top_n)
         )
-        if not df_gasto.empty:
-        
             fig_gasto = px.bar(
                 df_gasto,
                 x="herramienta",
