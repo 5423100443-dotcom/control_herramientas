@@ -516,7 +516,7 @@ with tab_dashboard:
                 barmode="group",
                 title="🔧 Cantidad de Cambios por Herramienta"
             )
-            fig_cambios.update_layout(bargap=0.5,bargroupgap=0.02)
+            fig_cambios.update_layout(width=max(900, len(df_cambios)*90),bargap=0.25,bargroupgap=0.05)
             fig_cambios.update_traces(
                 textposition="outside",
                 cliponaxis=False
@@ -537,7 +537,7 @@ with tab_dashboard:
                 yaxis_title="Cantidad de Cambios"
             )
         
-            st.plotly_chart(fig_cambios)
+            st.plotly_chart(fig_cambios,use_container_width=False)
         
         else:
             st.info("No hay datos para mostrar.")
