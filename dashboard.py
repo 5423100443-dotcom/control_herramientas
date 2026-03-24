@@ -501,19 +501,18 @@ with tab_dashboard:
             .groupby(["maquina","herramienta"])
             .size()
             .reset_index(name="cantidad_cambios")
-            .sort_values(by="cantidad_cambios", ascending=False)
         )
-        df_cambios = df_cambios.sort_values("cantidad_cambios", ascending=False).head(top_n)
+        df_cambios["herramienta_maquina"] = (df_cambios["maquina"] + "-" + df_cambios["herramienta"])
+        df_cambios = df_cambios.sort_values(by="cantidad_cambios", ascending=False).head(top_n)
         
         if not df_cambios.empty:
         
             fig_cambios = px.bar(
                 df_cambios,
-                x="herramienta",
+                x="herramienta_maquina",
                 y="cantidad_cambios",
                 text="cantidad_cambios",
                 color="maquina",
-                barmode="group",
                 title="🔧 Cantidad de Cambios por Herramienta"
             )
             fig_cambios.update_layout(width=max(900, len(df_cambios)*90),bargap=0.25,bargroupgap=0.05)
@@ -557,11 +556,10 @@ with tab_dashboard:
         if not df_gasto.empty:
             fig_gasto = px.bar(
                 df_gasto,
-                x="herramienta",
+                x="herramienta_maquina",
                 y="precio",
                 text="precio",
                 color="maquina",
-                barmode="group",
                 title="💰 Gasto Total por Herramienta"
             )
             fig_gasto.update_layout(width=max(900, len(df_gasto)*90), bargap=0.25, bargroupgap=0.05)
