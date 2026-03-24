@@ -562,6 +562,7 @@ with tab_dashboard:
                 color="maquina",
                 title="💰 Gasto Total por Herramienta"
             )
+            fig_gasto.update_xaxes(categotyorder="total descending")
             fig_gasto.update_layout(width=max(900, len(df_gasto)*90), bargap=0.25, bargroupgap=0.05)
         
             fig_gasto.update_traces(
