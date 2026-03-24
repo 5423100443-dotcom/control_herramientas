@@ -503,7 +503,7 @@ with tab_dashboard:
             .reset_index(name="cantidad_cambios")
             .sort_values(by="cantidad_cambios", ascending=False)
         )
-        df_cambios = df_cambios.sort_values("cantidad_cambios", ascending=false).head(top_n)
+        df_cambios = df_cambios.sort_values("cantidad_cambios", ascending=False).head(top_n)
         
         if not df_cambios.empty:
         
