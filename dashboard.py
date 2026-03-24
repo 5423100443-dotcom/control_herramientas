@@ -22,7 +22,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 st.set_page_config(
     page_title="Control Tool Crib CNC",
     page_icon="logo.png",
-    layout="centered"
+    layout="wide"
 )
 
 # =========================
@@ -564,6 +564,7 @@ with tab_dashboard:
                 barmode="group",
                 title="💰 Gasto Total por Herramienta"
             )
+            fig_gasto.update_layout(width=max(900, len(df_gasto)*90), bargap=0.25, bargroupgap=0.05)
         
             fig_gasto.update_traces(
                 texttemplate='$%{text:,.2f}',
@@ -586,7 +587,7 @@ with tab_dashboard:
                 yaxis_title="Total Gastado ($)"
             )
         
-            st.plotly_chart(fig_gasto, use_container_width=True)
+            st.plotly_chart(fig_gasto, use_container_width=False)
         
         else:
             st.info("No hay datos para mostrar.")
