@@ -535,7 +535,7 @@ with tab_dashboard:
                 yaxis_title="Cantidad de Cambios"
             )
         
-            st.plotly_chart(fig_cambios, use_container_width=True)
+            st.plotly_chart(fig_cambios)
         
         else:
             st.info("No hay datos para mostrar.")
