@@ -552,7 +552,7 @@ with tab_dashboard:
             .reset_index()
         )
         df_gasto ["herramienta_maquina"] = ( df_gasto["maquina"] + "-" + df_gasto["herramienta"])
-        df_gasto = dg_gasto.sort_values(by="precio",ascending=False).head(top_n)
+        df_gasto = df_gasto.sort_values(by="precio",ascending=False).head(top_n)
         if not df_gasto.empty:
             fig_gasto = px.bar(
                 df_gasto,
