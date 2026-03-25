@@ -509,7 +509,7 @@ with tab_dashboard:
         
             fig_cambios = px.bar(
                 df_cambios,
-                x="herramienta_maquina",
+                x="herramienta",
                 y="cantidad_cambios",
                 text="cantidad_cambios",
                 color="maquina",
@@ -556,7 +556,7 @@ with tab_dashboard:
         if not df_gasto.empty:
             fig_gasto = px.bar(
                 df_gasto,
-                x="herramienta_maquina",
+                x="herramienta",
                 y="precio",
                 text="precio",
                 color="maquina",
