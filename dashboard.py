@@ -372,7 +372,7 @@ with tab_dashboard:
     meses = ["Seleccionar"] + sorted(df["mes"].unique(), reverse=True)
     maquinas = ["Seleccionar"] + sorted(df["maquina"].unique())
     empleados = ["Seleccionar"] + sorted(df["empleado"].unique())
-    top_n = st.slider("cantidad de herramientas a mostrar",5,50,15)
+    top_n = st.slider("cantidad de herramientas a mostrar",1,10,5)
 
     with col1:
         mes = st.selectbox("Mes", meses)
