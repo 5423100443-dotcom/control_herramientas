@@ -676,7 +676,7 @@ if rol in ["toolcrib","supervisor"]:
         
                         if "inserto" in str(row.get("tipo_cambio","")).lower():
         
-                            st.info(f"Inserto: {row.get('descripcion','')}")
+                            st.info(f"Inserto: {row.get('inserto','')}")
         
                             st.write(f"Cantidad: {row.get('cantidad_insertos',0)}")
         
