@@ -611,49 +611,60 @@ with tab_dashboard:
         # GRÁFICA 3 - GASTO POR NUMERO DE PARTE
         # =========================
         
-        # evitar valores vacíos
-        df_filtrado["numero_parte"] = df_filtrado["numero_parte"].fillna("SIN NUMERO")
+        # limpiar datos
+        df_filtrado["numero_parte"] = df_filtrado["numero_parte"].fillna("SIN NUMERO").astype(str)
+        df_filtrado["descripcion"] = df_filtrado["descripcion"].fillna("SIN DESCRIPCION").astype(str)
+        df_filtrado["precio"] = pd.to_numeric(df_filtrado["precio"], errors="coerce").fillna(0)
         
+        # agrupar
         df_parte = (
             df_filtrado
-            .groupby(["numero_parte", "descripcion"])["precio"]
+            .groupby(["numero_parte", "descripcion"], as_index=False)["precio"]
             .sum()
-            .reset_index()
-            .sort_values(by="precio", ascending=False)
-            .head(top_n)
         )
         
+        # ordenar
+        df_parte = df_parte.sort_values(by="precio", ascending=False).head(top_n)
+        
+        # crear texto combinado
+        df_parte["parte_desc"] = (
+            df_parte["numero_parte"]
+            + " - " +
+            df_parte["descripcion"]
+        )
+        
+        # recortar texto largo
+        df_parte["parte_desc"] = df_parte["parte_desc"].str[:60]
+        
+        # verificar datos
         if not df_parte.empty:
         
             fig_parte = px.bar(
-                df_parte,
-                x="numero_parte",
+                data_frame=df_parte,
+                x="parte_desc",
                 y="precio",
                 text="precio",
-                hover_data=["decripcion"],
                 title="💰 Gasto Total por Número de Parte"
             )
         
             fig_parte.update_traces(
                 texttemplate='$%{text:,.2f}',
-                textposition="outside",
-                cliponaxis=False
+                textposition="outside"
             )
         
             fig_parte.update_layout(
                 template="plotly_dark",
                 title_x=0.5,
-                xaxis_title="Número de Parte",
+                xaxis_title="Número de Parte / Descripción",
                 yaxis_title="Total Gastado ($)",
-                width=max(900, len(df_parte)*90),
-                margin=dict(t=120)
+                height=600,
+                width=max(1200, len(df_parte) * 90)
             )
         
-            st.plotly_chart(fig_parte, use_container_width=False)
+            st.plotly_chart(fig_parte, use_container_width=True)
         
         else:
-            st.info("No hay datos para mostrar.")
-
+            st.warning("No hay datos para mostrar.")
 
 # =========================
 # TOOLCRIB
