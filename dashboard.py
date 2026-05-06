@@ -335,6 +335,7 @@ with tab_dashboard:
         "maquina",
         "herramienta",
         "descripcion",
+        "numero_parte"
         "tipo_cambio",
         "motivo",
         "precio"
@@ -560,7 +561,7 @@ with tab_dashboard:
                 y="precio",
                 text="precio",
                 color="maquina",
-                title="💰 Gasto Total por Herramienta"
+                title="💰 Gasto por Herramienta"
             )
             fig_gasto.update_xaxes(categoryorder="total descending")
             fig_gasto.update_layout(width=max(900, len(df_gasto)*90), bargap=0.25, bargroupgap=0.05)
@@ -606,6 +607,51 @@ with tab_dashboard:
             st.markdown("## 📋 Historial")
             
             st.dataframe(df_filtrado)
+        # =========================
+        # GRÁFICA 3 - GASTO POR NUMERO DE PARTE
+        # =========================
+        
+        # evitar valores vacíos
+        df_filtrado["numero_parte"] = df_filtrado["numero_parte"].fillna("SIN NUMERO")
+        
+        df_parte = (
+            df_filtrado
+            .groupby("numero_parte")["precio"]
+            .sum()
+            .reset_index()
+            .sort_values(by="precio", ascending=False)
+            .head(top_n)
+        )
+        
+        if not df_parte.empty:
+        
+            fig_parte = px.bar(
+                df_parte,
+                x="numero_parte",
+                y="precio",
+                text="precio",
+                title="💰 Gasto Total por Número de Parte"
+            )
+        
+            fig_parte.update_traces(
+                texttemplate='$%{text:,.2f}',
+                textposition="outside",
+                cliponaxis=False
+            )
+        
+            fig_parte.update_layout(
+                template="plotly_dark",
+                title_x=0.5,
+                xaxis_title="Número de Parte",
+                yaxis_title="Total Gastado ($)",
+                width=max(900, len(df_parte)*90),
+                margin=dict(t=120)
+            )
+        
+            st.plotly_chart(fig_parte, use_container_width=False)
+        
+        else:
+            st.info("No hay datos para mostrar.")
 
 
 # =========================
