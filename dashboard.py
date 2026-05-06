@@ -616,7 +616,7 @@ with tab_dashboard:
         
         df_parte = (
             df_filtrado
-            .groupby("numero_parte")["precio"]
+            .groupby("numero_parte", "descripcion")["precio"]
             .sum()
             .reset_index()
             .sort_values(by="precio", ascending=False)
@@ -630,6 +630,7 @@ with tab_dashboard:
                 x="numero_parte",
                 y="precio",
                 text="precio",
+                hover_data=["decripcion"],
                 title="💰 Gasto Total por Número de Parte"
             )
         
