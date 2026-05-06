@@ -626,10 +626,6 @@ with tab_dashboard:
         # ordenar
         df_parte = df_parte.sort_values(by="precio", ascending=False).head(top_n)
         
-        
-        # recortar texto largo
-        df_parte["parte_desc"] = df_parte["parte_desc"].str[:60]
-        
         # verificar datos
         if not df_parte.empty:
         
