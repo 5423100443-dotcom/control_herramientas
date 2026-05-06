@@ -499,7 +499,7 @@ with tab_dashboard:
         # =========================
         df_cambios = (
             df_filtrado
-            .groupby(["maquina","herramienta","descripcion"])
+            .groupby(["maquina","herramienta","descripcion","numero_parte"])
             .size()
             .reset_index(name="cantidad_cambios")
         )
@@ -514,6 +514,7 @@ with tab_dashboard:
                 y="cantidad_cambios",
                 text="cantidad_cambios",
                 color="maquina",
+                hover_data=["descripcion", "numero_parte"],
                 title="🔧 Cantidad de Cambios por Herramienta"
             )
             fig_cambios.update_layout(width=max(900, len(df_cambios)*90),bargap=0.25,bargroupgap=0.05)
@@ -548,7 +549,7 @@ with tab_dashboard:
         
         df_gasto = (
             df_filtrado
-            .groupby(["maquina","herramienta","descripcion"])["precio"]
+            .groupby(["maquina","herramienta","descripcion","numero_parte"])["precio"]
             .sum()
             .reset_index()
         )
@@ -561,6 +562,7 @@ with tab_dashboard:
                 y="precio",
                 text="precio",
                 color="maquina",
+                hover_data=["descripcion","numero_parte"],
                 title="💰 Gasto por Herramienta"
             )
             fig_gasto.update_xaxes(categoryorder="total descending")
