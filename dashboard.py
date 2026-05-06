@@ -655,7 +655,7 @@ with tab_dashboard:
                 title_x=0.5,
                 xaxis_title="Número de Parte",
                 yaxis_title="Total Gastado ($)",
-                xaxis_tickangle=-45,
+                xaxis_tickangle=45,
                 height=650
             )
         
