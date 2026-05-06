@@ -626,12 +626,6 @@ with tab_dashboard:
         # ordenar
         df_parte = df_parte.sort_values(by="precio", ascending=False).head(top_n)
         
-        # crear texto combinado
-        df_parte["parte_desc"] = (
-            df_parte["numero_parte"]
-            + " - " +
-            df_parte["descripcion"]
-        )
         
         # recortar texto largo
         df_parte["parte_desc"] = df_parte["parte_desc"].str[:60]
@@ -641,9 +635,10 @@ with tab_dashboard:
         
             fig_parte = px.bar(
                 data_frame=df_parte,
-                x="parte_desc",
+                x="numero_parte",
                 y="precio",
                 text="precio",
+                hoven_data=["descripcion"],
                 title="💰 Gasto Total por Número de Parte"
             )
         
