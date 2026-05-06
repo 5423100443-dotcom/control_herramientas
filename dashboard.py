@@ -616,7 +616,7 @@ with tab_dashboard:
         
         df_parte = (
             df_filtrado
-            .groupby("numero_parte", "descripcion")["precio"]
+            .groupby(["numero_parte", "descripcion"])["precio"]
             .sum()
             .reset_index()
             .sort_values(by="precio", ascending=False)
