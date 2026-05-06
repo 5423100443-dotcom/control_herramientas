@@ -611,45 +611,52 @@ with tab_dashboard:
         # GRÁFICA 3 - GASTO POR NUMERO DE PARTE
         # =========================
         
-        # limpiar datos
+                # limpiar datos
         df_filtrado["numero_parte"] = df_filtrado["numero_parte"].fillna("SIN NUMERO").astype(str)
+        
         df_filtrado["descripcion"] = df_filtrado["descripcion"].fillna("SIN DESCRIPCION").astype(str)
-        df_filtrado["precio"] = pd.to_numeric(df_filtrado["precio"], errors="coerce").fillna(0)
+        
+        df_filtrado["precio"] = pd.to_numeric(
+            df_filtrado["precio"],
+            errors="coerce"
+        ).fillna(0)
         
         # agrupar
         df_parte = (
             df_filtrado
-            .groupby(["numero_parte", "descripcion"], as_index=False)["precio"]
-            .sum()
+            .groupby(["numero_parte", "descripcion"], as_index=False)
+            .agg({"precio":"sum"})
         )
         
         # ordenar
-        df_parte = df_parte.sort_values(by="precio", ascending=False).head(top_n)
+        df_parte = df_parte.sort_values(
+            by="precio",
+            ascending=False
+        ).head(top_n)
         
-        # verificar datos
+        # verificar si hay datos
         if not df_parte.empty:
         
             fig_parte = px.bar(
-                data_frame=df_parte,
+                df_parte,
                 x="numero_parte",
                 y="precio",
-                text="precio",
-                hoven_data=["descripcion"],
+                hover_data=["descripcion"],
                 title="💰 Gasto Total por Número de Parte"
             )
         
             fig_parte.update_traces(
-                texttemplate='$%{text:,.2f}',
+                text=df_parte["precio"].apply(lambda x: f"${x:,.2f}"),
                 textposition="outside"
             )
         
             fig_parte.update_layout(
                 template="plotly_dark",
                 title_x=0.5,
-                xaxis_title="Número de Parte / Descripción",
+                xaxis_title="Número de Parte",
                 yaxis_title="Total Gastado ($)",
-                height=600,
-                width=max(1200, len(df_parte) * 90)
+                xaxis_tickangle=-45,
+                height=650
             )
         
             st.plotly_chart(fig_parte, use_container_width=True)
