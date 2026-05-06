@@ -499,7 +499,7 @@ with tab_dashboard:
         # =========================
         df_cambios = (
             df_filtrado
-            .groupby(["maquina","herramienta"])
+            .groupby(["maquina","herramienta","descripcion"])
             .size()
             .reset_index(name="cantidad_cambios")
         )
@@ -549,7 +549,7 @@ with tab_dashboard:
         
         df_gasto = (
             df_filtrado
-            .groupby(["maquina","herramienta"])["precio"]
+            .groupby(["maquina","herramienta","descripcion"])["precio"]
             .sum()
             .reset_index()
         )
